@@ -4,5 +4,43 @@ This project is to implement the mjf5.011 project at the University of York.
 
 == Outline
 
-The SimpleCPU ISS is a teaching tool designed to help students (or anyone) who is struggling to understand how CPU execute instructions.
-Anyone could learn what an instruction does when manually calculating something but how does a CPU interpret that.
+The SimpleCPU ISS is a teaching tool designed to help students (or anyone) who is struggling to understand how CPU
+execute instructions. Anyone could learn what an instruction does when manually calculating something but how does a
+CPU interpret that.
+
+The basic structure is the different sections of the CPU is held within the `sections` folder, this has been designed
+as simply as possible to understand the logic for anyone who wishes to learn the data flow.
+
+== Instructions
+
+Below is a list of instructions that have been implemented, this is based on the SimpleCPU 1a architecture.
+
+Instructions are 16-bits long and are comprised on three sections, the most significant 4-bits is the instruction.
+The next 4-bits are not used in this architecture as this is reserved in future iterations.
+
+The final 8-bits are currently one of two things: K is a constant, and the value is directly added to the Accumulator,
+A is the address of a memory location where it will be moved into the Accumulator.
+
+The exception to this is Jumps where the data at the address is stored in the Program Counter.
+
+`MOVE    0000 XXXX KKKKKKKK`
+
+`ADD     0001 XXXX KKKKKKKK`
+
+`SUB     0010 XXXX KKKKKKKK`
+
+`AND     0011 XXXX KKKKKKKK`
+
+`LOAD    0100 XXXX AAAAAAAA`
+
+`STORE   0101 XXXX AAAAAAAA`
+
+`ADDM    0110 XXXX AAAAAAAA`
+
+`SUBM    0111 XXXX AAAAAAAA`
+
+`JUMPU   1000 XXXX AAAAAAAA`
+
+`JUMPZ   1001 XXXX AAAAAAAA`
+
+`JUMPNZ  1010 XXXX AAAAAAAA`
