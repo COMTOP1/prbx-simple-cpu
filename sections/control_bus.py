@@ -26,21 +26,21 @@ The Accumulator outputs to the Data In Bus
 """
 ACC_CTL2: ControlLine = 0B000010000000
 """
-ACC_CTL2 - Accumulator control line 2
+ACC_CTL2 - ALU control line 2
 
-The control line 2 is part of Accumulator control
+The control line 2 is part of ALU control
 """
 ACC_CTL1: ControlLine = 0B000001000000
 """
-ACC_CTL1 - Accumulator control line 1
+ACC_CTL1 - ALU control line 1
 
-The control line 1 is part of Accumulator control
+The control line 1 is part of ALU control
 """
 ACC_CTL0: ControlLine = 0B000000100000
 """
-ACC_CTL0 - Accumulator control line 0
+ACC_CTL0 - ALU control line 0
 
-The control line 0 is part of Accumulator control
+The control line 0 is part of ALU control
 """
 ADDR_SEL: ControlLine = 0B000000010000
 """
@@ -52,7 +52,7 @@ Signal 1 passes the Internal Bus to the Address Bus
 """
 DATA_SEL: ControlLine = 0B000000001000
 """
-ADDR_SEL - Data mux selector
+DATA_SEL - Data mux selector
 
 Signal 0 passes the Internal Bus to the ALU
 
