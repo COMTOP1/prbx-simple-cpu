@@ -23,24 +23,34 @@ A is the address of a memory location where it will be moved into the Accumulato
 
 The exception to this is Jumps where the data at the address is stored in the Program Counter.
 
-`MOVE    0000 XXXX KKKKKKKK`
+`MOVE   0000 XXXX KKKKKKKK`
 
-`ADD     0001 XXXX KKKKKKKK`
+`ADD    0001 XXXX KKKKKKKK`
 
-`SUB     0010 XXXX KKKKKKKK`
+`SUB    0010 XXXX KKKKKKKK`
 
-`AND     0011 XXXX KKKKKKKK`
+`AND    0011 XXXX KKKKKKKK`
 
-`LOAD    0100 XXXX AAAAAAAA`
+`LOAD   0100 XXXX AAAAAAAA`
 
-`STORE   0101 XXXX AAAAAAAA`
+`STORE  0101 XXXX AAAAAAAA`
 
-`ADDM    0110 XXXX AAAAAAAA`
+`ADDM   0110 XXXX AAAAAAAA`
 
-`SUBM    0111 XXXX AAAAAAAA`
+`SUBM   0111 XXXX AAAAAAAA`
 
-`JUMPU   1000 XXXX AAAAAAAA`
+`JUMPU  1000 XXXX AAAAAAAA`
 
-`JUMPZ   1001 XXXX AAAAAAAA`
+`JUMPZ  1001 XXXX AAAAAAAA`
 
-`JUMPNZ  1010 XXXX AAAAAAAA`
+`JUMPNZ 1010 XXXX AAAAAAAA`
+
+== Micro Instructions
+
+Micro instructions are the building blocks of any instruction that exists in a system.
+Each of the preceding instructions were comprised of a variety of micro instructions across multiple cycles.
+
+Instructions sometimes require multiple cycles to completely execute an instruction where data needs to be moved around
+in a more complex manor.
+
+This means that the "Fetch, Decode and Execute" cycle can sometimes be more of a "Fetch, Decode, multiple Execute"
