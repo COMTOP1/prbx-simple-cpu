@@ -40,8 +40,8 @@ class Run:
         self.__data_in_bus = DataBus(16)
         self.__data_out_bus = DataBus(16)
         self.__address_bus = DataBus(8)
-        self.__alu_mux = Mux()
-        self.__addr_mux = Mux()
+        self.__alu_mux = Mux(8)
+        self.__addr_mux = Mux(8)
 
 
 if __name__ == '__main__':
