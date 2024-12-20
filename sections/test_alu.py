@@ -37,6 +37,55 @@ class TestALU(unittest.TestCase):
         with self.assertRaises(ValueError):
             alu.set_control(8)
 
+    def test_alu_8_bit_add(self):
+        alu = ALU(8)
+        alu.set_control(0)
+        alu.set_input_a(12)
+        alu.set_input_b(14)
+        self.assertEqual(alu.get(), 26)
+
+    def test_alu_8_bit_add_overflow(self):
+        alu = ALU(8)
+        alu.set_control(0)
+        alu.set_input_a(123)
+        alu.set_input_b(141)
+        self.assertEqual(alu.get(), 8)
+
+    def test_alu_8_bit_sub(self):
+        alu = ALU(8)
+        alu.set_control(1)
+        alu.set_input_a(12)
+        alu.set_input_b(6)
+        self.assertEqual(alu.get(), 6)
+
+    def test_alu_8_bit_sub_underflow(self):
+        alu = ALU(8)
+        alu.set_control(1)
+        alu.set_input_a(123)
+        alu.set_input_b(141)
+        self.assertEqual(alu.get(), 18)
+
+    def test_alu_8_bit_and(self):
+        alu = ALU(8)
+        alu.set_control(2)
+        alu.set_input_a(123)
+        alu.set_input_b(141)
+        self.assertEqual(alu.get(), 9)
+
+    def test_alu_8_bit_pass(self):
+        alu = ALU(8)
+        alu.set_control(4)
+        alu.set_input_a(123)
+        alu.set_input_b(141)
+        self.assertEqual(alu.get(), 141)
+
+    def test_alu_8_bit_nu(self):
+        alu = ALU(8)
+        alu.set_control(5)
+        alu.set_input_a(123)
+        alu.set_input_b(141)
+        self.assertEqual(alu.get(), 0)
+
 
 if __name__ == '__main__':
     unittest.main()
