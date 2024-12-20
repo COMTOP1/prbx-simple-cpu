@@ -6,7 +6,7 @@ class ALU:
     __size: int = 0
 
     def __init__(self, size: int):
-        if size != 8 or size != 16:
+        if size != 8 and size != 16:
             raise error(f'ALU {size} is not a valid size')
         self.__size = size
 
