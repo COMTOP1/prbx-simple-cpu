@@ -73,9 +73,9 @@ class Run:
 
     def gui(self):
         window = tk.Tk()
-        # window.title('SimpleCPU')
-        # label = tk.Label(text="This is a pain!")
-        # label.pack()
+        window.title('SimpleCPU')
+        label = tk.Label(text="This is a pain!")
+        label.pack()
         #
         # window.mainloop()
         print('gui')
