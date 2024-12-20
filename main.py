@@ -25,6 +25,8 @@ class Run:
     __alu_mux: Mux
     __addr_mux: Mux
 
+    __args: argparse.Namespace
+
     def __init__(self):
         simulator_presenting_group = self.__parser.add_mutually_exclusive_group()
         simulator_presenting_group.add_argument("-cli", "--cli-simulator", help="Selecting command line simulator",
@@ -32,7 +34,7 @@ class Run:
         simulator_presenting_group.add_argument("-gui", "--gui-simulator", help="Selecting graphical simulator",
                                               action='store_true')
 
-        args = self.__parser.parse_args()
+        self.__args = self.__parser.parse_args()
 
         self.__memory = Memory(256)
         self.__control_bus = ControlBus()
