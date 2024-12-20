@@ -1,6 +1,6 @@
 import unittest
 
-from instruction_register import InstructionRegister
+from sections.instruction_register import InstructionRegister
 
 
 class TestInstructionRegister(unittest.TestCase):

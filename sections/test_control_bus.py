@@ -1,6 +1,6 @@
 import unittest
 
-from control_bus import ControlBus, DATA_SEL, ADDR_SEL, IR_EN
+from sections.control_bus import ControlBus, DATA_SEL, ADDR_SEL, IR_EN
 
 
 class TestControlBus(unittest.TestCase):

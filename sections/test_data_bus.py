@@ -1,6 +1,6 @@
 import unittest
 
-from data_bus import DataBus
+from sections.data_bus import DataBus
 
 
 class TestDataBus(unittest.TestCase):

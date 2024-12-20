@@ -1,7 +1,7 @@
 import math
 import unittest
 
-from memory import Memory
+from sections.memory import Memory
 
 
 class TestMemory(unittest.TestCase):

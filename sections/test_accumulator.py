@@ -1,6 +1,6 @@
 import unittest
 
-from accumulator import Accumulator
+from sections.accumulator import Accumulator
 
 
 class TestAccumulator(unittest.TestCase):

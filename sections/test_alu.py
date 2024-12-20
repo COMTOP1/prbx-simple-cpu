@@ -1,6 +1,6 @@
 import unittest
 
-from alu import ALU
+from sections.alu import ALU
 
 
 class TestALU(unittest.TestCase):
