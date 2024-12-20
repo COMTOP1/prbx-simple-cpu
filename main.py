@@ -1,6 +1,7 @@
 import argparse
 
 from sections.control_bus import ControlBus
+from sections.accumulator import Accumulator
 from sections.data_bus import DataBus
 from sections.instruction_register import InstructionRegister
 from sections.memory import Memory
@@ -20,6 +21,7 @@ class Run:
     __data_in_bus: DataBus
     __data_out_bus: DataBus
     __address_bus: DataBus
+    __accumulator: Accumulator
     __alu_mux: Mux
     __addr_mux: Mux
 
@@ -40,6 +42,7 @@ class Run:
         self.__data_in_bus = DataBus(16)
         self.__data_out_bus = DataBus(16)
         self.__address_bus = DataBus(8)
+        self.__accumulator = Accumulator()
         self.__alu_mux = Mux(8)
         self.__addr_mux = Mux(8)
 
