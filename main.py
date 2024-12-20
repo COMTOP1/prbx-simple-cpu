@@ -1,7 +1,7 @@
 import argparse
 
-from sections.control_bus import ControlBus
 from sections.accumulator import Accumulator
+from sections.control_bus import ControlBus, PC_EN, IR_EN, ACC_EN
 from sections.data_bus import DataBus
 from sections.instruction_register import InstructionRegister
 from sections.memory import Memory
@@ -57,6 +57,17 @@ class Run:
         self.__data_out_bus.clear()
         self.__address_bus.clear()
         self.__internal_bus.clear()
+
+    def process_control_bus(self):
+        self.__set_control_defaults()
+        if (self.__control_bus.read_control_bus() & PC_EN) >> 11:
+            self.__addr_mux.set_input_0(self.__program_counter.get())
+        if (self.__control_bus.read_control_bus() & IR_EN) >> 9:
+            self.__internal_bus.write(self.__instruction_register.get())
+            self.__alu_mux.set_input_0(self.__internal_bus.read())
+            self.__addr_mux.set_input_1(self.__internal_bus.read())
+        if (self.__control_bus.read_control_bus() & ACC_EN) >> 8:
+            self.__address_bus.write(self.__accumulator.get())
 
 
 if __name__ == '__main__':
