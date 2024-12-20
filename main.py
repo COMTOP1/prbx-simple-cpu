@@ -48,6 +48,16 @@ class Run:
         self.__alu_mux = Mux(8)
         self.__addr_mux = Mux(8)
 
+    def __set_control_defaults(self):
+        self.__alu_mux.set_input_0(0)
+        self.__alu_mux.set_control(0)
+        self.__addr_mux.set_input_0(0)
+        self.__addr_mux.set_control(0)
+        self.__data_in_bus.clear()
+        self.__data_out_bus.clear()
+        self.__address_bus.clear()
+        self.__internal_bus.clear()
+
 
 if __name__ == '__main__':
     Run()
