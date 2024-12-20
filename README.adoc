@@ -33,44 +33,66 @@ MOVE instruction moves the value of `KKKKKKKK` into the ACC
 [%hardbreaks]
 `ADD    0001 XXXX KKKKKKKK`
 ADD instruction adds the value of `KKKKKKKK` with the current value of the ACC and moves that to the ACC
-Please note that the Z (zero) flag is not set but is determined by the output of the ACC
+_Please note that the Z (zero) flag is not set but is determined by the output of the ACC_
 `ACC <- ACC + KK`
 
 === SUB
 [%hardbreaks]
 `SUB    0010 XXXX KKKKKKKK`
+SUB instruction subtracts the value of `KKKKKKKK` from the current value of the ACC and moves that to the ACC
+_Please note that the Z (zero) flag is not set but is determined by the output of the ACC_
+`ACC <- ACC - KK`
 
 === AND
 [%hardbreaks]
 `AND    0011 XXXX KKKKKKKK`
+AND instruction bitwise ands the value of `KKKKKKKK` and the current value of the ACC and moves that to the ACC
+_Please note that the Z (zero) flag is not set but is determined by the output of the ACC_
+`ACC <- ACC & KK`
 
 === LOAD
 [%hardbreaks]
 `LOAD   0100 XXXX AAAAAAAA`
+LOAD instruction moves the lower 8-bits of the memory location `AAAAAAAA` into the ACC
+e.g. `M[123]=9` so by the end of the execution `ACC=9`
 
 === STORE
 [%hardbreaks]
 `STORE  0101 XXXX AAAAAAAA`
+STORE instruction moves the 8-bit value from the ACC to the memory location `AAAAAAAA`
+e.g. `ACC=11` so by the end of the execution `M[121]=11`
 
 === ADDM
-[%hardbreaks]
-`ADDM   0110 XXXX AAAAAAAA`
+`ADDM   0110 XXXX AAAAAAAA` +
+ADDM instruction adds the value from memory address `AAAAAAAA` with the current value of the ACC and moves
+that to the ACC +
+_Please note that the Z (zero) flag is not set but is determined by the output of the ACC_ +
+`ACC <- ACC + M[AA]`
 
 === SUBM
-[%hardbreaks]
-`SUBM   0111 XXXX AAAAAAAA`
+`SUBM   0111 XXXX AAAAAAAA` +
+SUBM instruction subtracts the value from memory address `AAAAAAAA` with the current value of the ACC
+and moves that to the ACC +
+_Please note that the Z (zero) flag is not set but is determined by the output of the ACC_ +
+`ACC <- ACC - M[AA]`
 
 === JUMPU
 [%hardbreaks]
 `JUMPU  1000 XXXX AAAAAAAA`
+JUMPU instruction is an unconditional jump to memory location `AAAAAAAA` by putting the value of `AAAAAAAA` into the PC
+`PC <- AA`
 
 === JUMPZ
-[%hardbreaks]
-`JUMPZ  1001 XXXX AAAAAAAA`
+`JUMPZ  1001 XXXX AAAAAAAA` +
+JUMPZ instruction is a conditional jump to memory location `AAAAAAAA`
+if the zero flag is set `Z = 1` by putting the value of `AAAAAAAA` into the PC +
+`PC <- IF Z=1 THEN PC <- AA ELSE PC <- PC + 1`
 
 === JUMPNZ
-[%hardbreaks]
-`JUMPNZ 1010 XXXX AAAAAAAA`
+`JUMPNZ 1010 XXXX AAAAAAAA` +
+JUMPNZ instruction is a conditional jump to memory location `AAAAAAAA`
+if the zero flag is unset `Z = 0` by putting the value of `AAAAAAAA` into the PC +
+`PC <- IF Z=0 THEN PC <- AA ELSE PC <- PC + 1`
 
 == Micro Instructions
 
