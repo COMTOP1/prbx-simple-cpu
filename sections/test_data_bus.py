@@ -17,7 +17,7 @@ class TestDataBus(unittest.TestCase):
 
     def test_bus_8_bit_invalid(self):
         bus = DataBus(8)
-        with self.assertRaises(OSError):
+        with self.assertRaises(ValueError):
             bus.write(256)
 
     def test_bus_10_bit_valid(self):
@@ -27,7 +27,7 @@ class TestDataBus(unittest.TestCase):
 
     def test_bus_10_bit_invalid(self):
         bus = DataBus(10)
-        with self.assertRaises(OSError):
+        with self.assertRaises(ValueError):
             bus.write(1100)
 
     def test_bus_16_bit_valid(self):
@@ -37,7 +37,7 @@ class TestDataBus(unittest.TestCase):
 
     def test_bus_16_bit_invalid(self):
         bus = DataBus(16)
-        with self.assertRaises(OSError):
+        with self.assertRaises(ValueError):
             bus.write(70000)
 
     def test_bus_clear(self):
@@ -47,7 +47,7 @@ class TestDataBus(unittest.TestCase):
         self.assertEqual(bus.read(), 0)
 
     def test_bus_init_error(self):
-        with self.assertRaises(OSError):
+        with self.assertRaises(ValueError):
             DataBus(7)
 
 

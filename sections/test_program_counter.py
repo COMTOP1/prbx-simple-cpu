@@ -22,7 +22,7 @@ class TestProgramCounter(unittest.TestCase):
         self.assertEqual(self.program_counter.get(), 255)
 
     def test_program_counter_insert_error(self):
-        with self.assertRaises(OSError):
+        with self.assertRaises(ValueError):
             self.program_counter.insert(70000)
 
 if __name__ == '__main__':
