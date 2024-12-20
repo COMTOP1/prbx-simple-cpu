@@ -14,7 +14,7 @@ class TestInstructionRegister(unittest.TestCase):
             self.assertEqual(self.instruction_register.get(), expected_value)
 
     def test_instruction_register_error(self):
-        with self.assertRaises(OSError):
+        with self.assertRaises(ValueError):
             self.instruction_register.insert(70000)
 
 if __name__ == '__main__':

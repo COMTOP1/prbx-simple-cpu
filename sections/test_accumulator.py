@@ -14,7 +14,7 @@ class TestAccumulator(unittest.TestCase):
             self.assertEqual(self.accumulator.get(), expected_value)
 
     def test_accumulator_error(self):
-        with self.assertRaises(OSError):
+        with self.assertRaises(ValueError):
             self.accumulator.insert(256)
 
 if __name__ == '__main__':
