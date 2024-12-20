@@ -3,7 +3,7 @@ import unittest
 from mux import Mux
 
 
-class MyTestCase(unittest.TestCase):
+class TestMUX(unittest.TestCase):
     def test_mux_8_bit_get_input_0(self):
         mux = Mux(8)
         mux.set_input_0(12)
