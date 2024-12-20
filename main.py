@@ -1,4 +1,5 @@
 import argparse
+import tkinter as tk
 
 from sections.accumulator import Accumulator
 from sections.control_bus import ControlBus, PC_EN, IR_EN, ACC_EN
@@ -69,6 +70,26 @@ class Run:
         if (self.__control_bus.read_control_bus() & ACC_EN) >> 8:
             self.__address_bus.write(self.__accumulator.get())
 
+    def gui(self):
+        window = tk.Tk()
+        # window.title('SimpleCPU')
+        # label = tk.Label(text="This is a pain!")
+        # label.pack()
+        #
+        # window.mainloop()
+        print('gui')
+
+    def cli(self):
+        print('cli')
+
+    def run(self):
+        if self.__args.gui_simulator:
+            self.gui()
+        elif self.__args.cli_simulator:
+            self.cli()
+        else:
+            raise Exception('No simulator selected')
+
 
 if __name__ == '__main__':
-    Run()
+    Run().run()
