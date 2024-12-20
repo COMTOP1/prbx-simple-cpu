@@ -32,6 +32,7 @@ class Run:
 
         args = self.__parser.parse_args()
 
+        self.__memory = Memory(256)
         self.__control_bus = ControlBus()
         self.__instruction_register = InstructionRegister()
         self.__program_counter = ProgramCounter()
