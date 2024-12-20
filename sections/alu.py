@@ -45,7 +45,10 @@ class ALU:
         if not self.__control_0 and not self.__control_1 and not self.__control_2:
             return (self.__input_a + self.__input_b) & self.__output_mask
         elif self.__control_0 and not self.__control_1 and not self.__control_2:
-            return (self.__input_a - self.__input_b) & self.__output_mask
+            temp: int = self.__input_a - self.__input_b
+            while temp < 0:
+                temp = int(math.pow(2, self.__size)) - temp
+            return temp & self.__output_mask
         elif not self.__control_0 and self.__control_1 and not self.__control_2:
             return (self.__input_a & self.__input_b) & self.__output_mask
         elif not self.__control_0 and not self.__control_1 and self.__control_2:
