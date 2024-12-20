@@ -37,9 +37,6 @@ class ALU:
         self.__control_0 = control & 0b001 > 0
         self.__control_1 = control & 0b010 > 1
         self.__control_2 = control & 0b100 > 2
-        print(control & 0b001 > 0)
-        print(control & 0b010 > 1)
-        print(control & 0b100 > 2)
 
     def get(self):
         if not self.__control_0 and not self.__control_1 and not self.__control_2:
