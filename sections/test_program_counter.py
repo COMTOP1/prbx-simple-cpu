@@ -1,6 +1,6 @@
 import unittest
 
-from program_counter import ProgramCounter
+from sections.program_counter import ProgramCounter
 
 
 class TestProgramCounter(unittest.TestCase):

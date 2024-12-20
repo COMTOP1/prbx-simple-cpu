@@ -1,6 +1,6 @@
 import unittest
 
-from mux import Mux
+from sections.mux import Mux
 
 
 class TestMUX(unittest.TestCase):
