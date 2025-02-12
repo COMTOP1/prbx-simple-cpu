@@ -2,7 +2,8 @@ import argparse
 import tkinter as tk
 
 from sections.accumulator import Accumulator
-from sections.control_bus import ControlBus, PC_EN, IR_EN, ACC_EN
+from sections.control_bus import ControlBus, PC_EN, IR_EN, ACC_EN, RAM_EN, PC_LD, ACC_CTL2, ACC_CTL1, ACC_CTL0, \
+    ADDR_SEL, DATA_SEL, RAM_WR
 from sections.data_bus import DataBus
 from sections.instruction_register import InstructionRegister
 from sections.memory import Memory
@@ -63,16 +64,50 @@ class Run:
         self.__address_bus.clear()
         self.__internal_bus.clear()
 
+    def process_alu_control(self):
+        if not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
+            self.__accumulator.insert(self.__alu_mux.get() + self.__data_in_bus.read() & 0b11111111)
+        if not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
+            self.__accumulator.insert(self.__alu_mux.get() - self.__data_in_bus.read() & 0b11111111)
+        if not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
+            self.__accumulator.insert(self.__alu_mux.get() & self.__data_in_bus.read() & 0b11111111)
+        if not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
+            empty_function()
+        if (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
+            self.__accumulator.insert(self.__alu_mux.get() & 0b11111111)
+        if (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and not(self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
+            empty_function()
+        if (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
+            empty_function()
+        if (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
+            empty_function()
+
     def process_control_bus(self):
         self.__set_control_defaults()
+        # Process any micro-instruction that writes to a bus as other micro-instructions will read from this
+        if (self.__control_bus.read_control_bus() & RAM_EN) >> 2:
+            self.__data_out_bus.write(self.__memory.get(self.__address_bus.read()))
+        self.__instruction_register.insert(self.__data_out_bus.read())
+        self.__alu_mux.set_input_0(self.__internal_bus.read())
+        self.__alu_mux.set_input_1(self.__data_out_bus.read())
+        self.__addr_mux.set_input_1(self.__internal_bus.read())
+        if (self.__control_bus.read_control_bus() & ADDR_SEL) >> 4:
+            self.__addr_mux.set_control(1)
+        if (self.__control_bus.read_control_bus() & DATA_SEL) >> 3:
+            self.__alu_mux.set_control(1)
         if (self.__control_bus.read_control_bus() & PC_EN) >> 11:
             self.__addr_mux.set_input_0(self.__program_counter.get())
         if (self.__control_bus.read_control_bus() & IR_EN) >> 9:
             self.__internal_bus.write(self.__instruction_register.get())
-            self.__alu_mux.set_input_0(self.__internal_bus.read())
-            self.__addr_mux.set_input_1(self.__internal_bus.read())
         if (self.__control_bus.read_control_bus() & ACC_EN) >> 8:
             self.__address_bus.write(self.__accumulator.get())
+        # All outputs have been processed and now we will read from things
+        # The IR is set by default when there is data on the data out bus
+        self.process_alu_control()
+        if (self.__control_bus.read_control_bus() & PC_LD) >> 10:
+            self.__program_counter.insert(self.__internal_bus.read())
+        if (self.__control_bus.read_control_bus() & RAM_WR) >> 2:
+            self.__memory.insert(self.__addr_mux.get(), self.__data_in_bus.read())
 
     def gui(self):
         window = tk.Tk()
