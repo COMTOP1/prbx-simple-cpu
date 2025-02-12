@@ -10,6 +10,9 @@ from sections.mux import Mux
 from sections.program_counter import ProgramCounter
 
 
+def empty_function():
+    pass
+
 class Run:
     __parser = argparse.ArgumentParser(prog='Simple CPU instruction set simulator',
                                        description='Simple CPU instruction set simulator is a teaching tool showing ' +
