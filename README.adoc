@@ -11,6 +11,10 @@ CPU interpret that.
 The basic structure is the different sections of the CPU is held within the `sections` folder, this has been designed
 as simply as possible to understand the logic for anyone who wishes to learn the data flow.
 
+There is a difference from this simulation to the defined SimpleCPU 1a.
+Here I am implementing the RAM_EN micro-instruction as I want this simulation to be more accurate to a real CPU where
+you have to explicitly enable the memory out.
+
 == Instructions
 
 Below is a list of instructions that have been implemented, this is based on the SimpleCPU 1a architecture.
@@ -171,7 +175,7 @@ Signal 1 passes the Data Out Bus to the ALU
 === RAM_EN
 [%hardbreaks]
 `RAM_EN` - RAM enable = `0B000000000100`
-The RAM outputs to the Data Out Bus (not used)
+The RAM outputs to the Data Out Bus
 
 === RAM_WR
 [%hardbreaks]

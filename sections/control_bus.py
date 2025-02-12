@@ -62,7 +62,7 @@ RAM_EN: ControlLine =   0B000000000100
 """
 RAM_EN - RAM enable
 
-The RAM outputs to the Data Out Bus (not used)
+The RAM outputs to the Data Out Bus
 """
 RAM_WR: ControlLine =   0B000000000010
 """
