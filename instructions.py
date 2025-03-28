@@ -24,5 +24,8 @@ STORE: Instruction = [IR_EN | ROM_EN,
 ADDM: Instruction = [IR_EN | DATA_SEL | ROM_EN,
                      PC_EN | ADDR_SEL | DATA_SEL | RAM_EN,
                      ACC_EN | ADDR_SEL | DATA_SEL | RAM_EN]
+SUBM: Instruction = [IR_EN | ACC_CTL0 | DATA_SEL | ROM_EN,
+                     PC_EN | ACC_CTL0 | ADDR_SEL | DATA_SEL | RAM_EN,
+                     ACC_EN | ACC_CTL0 | ADDR_SEL | DATA_SEL | RAM_EN]
 JUMPU: Instruction = [IR_EN | ROM_EN,
                       IR_EN | PC_LD]
