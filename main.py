@@ -30,6 +30,7 @@ class Run:
     __accumulator: Accumulator
     __alu_mux: Mux
     __addr_mux: Mux
+    __zero_flag: bool
 
     __args: argparse.Namespace
 
@@ -81,6 +82,7 @@ class Run:
             empty_function()
         if (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
             empty_function()
+        self.__zero_flag = self.__accumulator.get() == 0
 
     def process_control_bus(self):
         self.__set_control_defaults()
@@ -105,7 +107,14 @@ class Run:
         # The IR is set by default when there is data on the data out bus
         self.process_alu_control()
         if (self.__control_bus.read_control_bus() & PC_LD) >> 10:
-            self.__program_counter.insert(self.__internal_bus.read())
+            if (self.__control_bus.read_control_bus() & ZERO_FLAG) >> 12:
+                if self.__zero_flag:
+                    self.__program_counter.insert(self.__internal_bus.read())
+            elif (self.__control_bus.read_control_bus() & NOT_ZERO_FLAG) >> 13:
+                if not self.__zero_flag:
+                    self.__program_counter.insert(self.__internal_bus.read())
+            else:
+                self.__program_counter.insert(self.__internal_bus.read())
         if (self.__control_bus.read_control_bus() & RAM_WR) >> 2:
             self.__memory.insert(self.__addr_mux.get(), self.__data_in_bus.read())
 
