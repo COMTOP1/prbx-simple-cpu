@@ -1,7 +1,7 @@
 from sections.control_bus import IR_EN, ACC_CTL0, ACC_CTL1, ACC_CTL2, ROM_EN, PC_EN, ACC_EN, DATA_SEL, ADDR_SEL, RAM_EN, \
     RAM_WR, PC_LD
 
-type Instruction = list[int]
+type Instruction = list[ControlLine]
 
 MOVE: Instruction = [IR_EN | ACC_CTL2 | ROM_EN,
                      PC_EN | ACC_CTL2,
