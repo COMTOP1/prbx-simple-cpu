@@ -1,5 +1,5 @@
 from sections.control_bus import IR_EN, ACC_CTL0, ACC_CTL1, ACC_CTL2, ROM_EN, PC_EN, ACC_EN, DATA_SEL, ADDR_SEL, RAM_EN, \
-    RAM_WR, PC_LD
+    RAM_WR, PC_LD, ZERO_FLAG, NOT_ZERO_FLAG, ControlLine
 
 type Instruction = list[ControlLine]
 
@@ -29,3 +29,21 @@ SUBM: Instruction = [IR_EN | ACC_CTL0 | DATA_SEL | ROM_EN,
                      ACC_EN | ACC_CTL0 | ADDR_SEL | DATA_SEL | RAM_EN]
 JUMPU: Instruction = [IR_EN | ROM_EN,
                       IR_EN | PC_LD]
+JUMPZ: Instruction = [IR_EN | ROM_EN,
+                      IR_EN | ZERO_FLAG | PC_LD]
+JUMPNZ: Instruction = [IR_EN | ROM_EN,
+                      IR_EN | NOT_ZERO_FLAG | PC_LD]
+
+INSTRUCTIONS: list[Instruction] = [
+    MOVE,
+    ADD,
+    SUB,
+    AND,
+    LOAD,
+    STORE,
+    ADDM,
+    SUBM,
+    JUMPU,
+    JUMPZ,
+    JUMPNZ,
+]
