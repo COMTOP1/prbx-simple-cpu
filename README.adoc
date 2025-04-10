@@ -16,6 +16,10 @@ Here I am implementing the RAM_EN micro-instruction as I want this simulation to
 you have to explicitly enable the memory out. There are a few more modifications to make more sense and not implying
 that operations happen without specifying.
 
+There is a cap on how many instructions can be executed as this could result in an infinite loop due to the existence
+of jumps and unconditional jumps.
+This limit is set to 1000 as that should be more than sufficient for mist programs.
+
 == Instructions
 
 Below is a list of instructions that have been implemented, this is based on the SimpleCPU 1a architecture.
