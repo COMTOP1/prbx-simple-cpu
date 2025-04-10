@@ -10,7 +10,7 @@ class ProgramCounter:
 
     def enable(self):
         self.__content += 1
-        if self.__content == math.pow(2, 8):
+        if self.__content >= math.pow(2, 8):
             self.__content = 0
 
     def get(self):
