@@ -91,6 +91,10 @@ def parser(raw_asm: str) -> list[int]:
             if value < 0 or value > 255:
                 raise ValueError("JUMPNZ instruction must be between 0 and 255")
             memory_value = 0xA000 + value
+        elif split_instruction[0] == "HALT":
+            if len(split_instruction) != 1:
+                raise ValueError("HALT instruction must have 1 arguments")
+            memory_value = 0xF000
         else:
             raise ValueError(f"Unsupported instruction: {split_instruction}")
         returning_memory.append(memory_value)
