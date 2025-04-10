@@ -31,11 +31,11 @@ PC_LD - Program Counter load
 
 The Program Counter outputs to the Address Bus mux
 """
-IR_EN: ControlLine =    0B00001000000000
+IR_WR: ControlLine =            0B00000010000000000
 """
-IR_EN - Instruction Register enable
+IR_WR - Instruction Register write enable (0X400)
 
-The Program Counter outputs to the Internal Bus
+The Instruction Register can be written to
 """
 ACC_EN: ControlLine =   0B00000100000000
 """
