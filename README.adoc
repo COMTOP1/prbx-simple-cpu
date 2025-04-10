@@ -13,7 +13,8 @@ as simply as possible to understand the logic for anyone who wishes to learn the
 
 There is a difference from this simulation to the defined SimpleCPU 1a.
 Here I am implementing the RAM_EN micro-instruction as I want this simulation to be more accurate to a real CPU where
-you have to explicitly enable the memory out.
+you have to explicitly enable the memory out. There are a few more modifications to make more sense and not implying
+that operations happen without specifying.
 
 == Instructions
 
