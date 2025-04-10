@@ -292,14 +292,10 @@ class Run:
         JUMPZ 11
         HALT''')
         i = 0
-        print(len(parsed))
         while i < len(parsed):
             self.__memory.insert(i, parsed[i])
-            hex_string = format(parsed[i], '0{}x'.format(4))
-            print(i, "0x"+hex_string)
-            # self.__control_bus.clear()
-            # self.__control_bus.add_control(memory)
-            # self.process_control_bus()
+            # hex_string = format(parsed[i], '0{}x'.format(4))
+            # print(i, "0x"+hex_string)
             i += 1
         run = True
         max_runs = 1000
