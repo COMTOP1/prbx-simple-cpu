@@ -1,9 +1,11 @@
 import argparse
 import tkinter as tk
 
+from instructions import MOVE, ADD, SUB, AND, LOAD, STORE, ADDM, SUBM, JUMPU, JUMPZ, JUMPNZ, HALT
+from parser import parser
 from sections.accumulator import Accumulator
-from sections.control_bus import ControlBus, PC_EN, IR_EN, ACC_EN, RAM_EN, PC_LD, ACC_CTL2, ACC_CTL1, ACC_CTL0, \
-    ADDR_SEL, DATA_SEL, RAM_WR
+from sections.control_bus import ControlBus, PC_EN, IR_WR, ACC_EN, RAM_EN, PC_LD, ACC_CTL2, ACC_CTL1, ACC_CTL0, \
+    ADDR_SEL, DATA_SEL, RAM_WR, ZERO_FLAG, NOT_ZERO_FLAG, PC_INC, HALT_FLAG, ACC_WR
 from sections.data_bus import DataBus
 from sections.instruction_register import InstructionRegister
 from sections.memory import Memory
