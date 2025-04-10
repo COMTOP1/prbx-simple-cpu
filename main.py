@@ -104,39 +104,66 @@ class Run:
         self.__zero_flag = self.__accumulator.get() == 0
         print(9.5, self.__zero_flag, self.__accumulator.get())
 
-    def process_control_bus(self):
-        self.__set_control_defaults()
+    def process_control_bus(self) -> bool:
+        # self.__set_control_defaults()
+        print(10)
+        if (self.__control_bus.read_control_bus() & HALT_FLAG) >> 16:
+            print("HALT")
+            return True
         # Process any micro-instruction that writes to a bus as other micro-instructions will read from this
-        if (self.__control_bus.read_control_bus() & RAM_EN) >> 2:
-            self.__data_out_bus.write(self.__memory.get(self.__address_bus.read()))
-        self.__instruction_register.insert(self.__data_out_bus.read())
-        self.__alu_mux.set_input_0(self.__internal_bus.read())
-        self.__alu_mux.set_input_1(self.__data_out_bus.read())
-        self.__addr_mux.set_input_1(self.__internal_bus.read())
         if (self.__control_bus.read_control_bus() & ADDR_SEL) >> 4:
             self.__addr_mux.set_control(1)
+        else: self.__addr_mux.set_control(0)
         if (self.__control_bus.read_control_bus() & DATA_SEL) >> 3:
             self.__alu_mux.set_control(1)
-        if (self.__control_bus.read_control_bus() & PC_EN) >> 11:
+        else: self.__alu_mux.set_control(0)
+        if (self.__control_bus.read_control_bus() & PC_EN) >> 13:
             self.__addr_mux.set_input_0(self.__program_counter.get())
-        if (self.__control_bus.read_control_bus() & IR_EN) >> 9:
-            self.__internal_bus.write(self.__instruction_register.get())
-        if (self.__control_bus.read_control_bus() & ACC_EN) >> 8:
-            self.__address_bus.write(self.__accumulator.get())
+            print(15, self.__program_counter.get())
+        if (self.__control_bus.read_control_bus() & PC_INC) >> 12:
+            self.__program_counter.enable()
+        if (self.__control_bus.read_control_bus() & ACC_EN) >> 9:
+            self.__data_in_bus.clear()
+            self.__data_in_bus.write(self.__accumulator.get())
+            print(17)
+        if (self.__control_bus.read_control_bus() & RAM_EN) >> 2:
+            self.__data_out_bus.clear()
+            self.__data_out_bus.write(self.__memory.get(self.__addr_mux.get()))
+            print(11, self.__memory.get(self.__addr_mux.get()) & 0B11111111, self.__data_out_bus.read() & 0B11111111, self.__addr_mux.get() & 0B11111111)
+        print(12, self.__data_out_bus.read() & 0B11111111)
+        if (self.__control_bus.read_control_bus() & IR_WR) >> 9:
+            self.__instruction_register.insert(self.__data_out_bus.read())
+            print(13, self.__instruction_register.get() & 0B11111111)
+        self.__internal_bus.clear()
+        self.__internal_bus.write(self.__instruction_register.get())
+        print(13.5, self.__instruction_register.get() & 0B11111111)
+        self.__addr_mux.set_input_1(self.__internal_bus.read() & 0B11111111)
+        self.__alu_mux.set_input_0(self.__internal_bus.read() & 0B11111111)
+        self.__alu_mux.set_input_1(self.__data_out_bus.read() & 0B11111111)
+        print(18, self.__data_out_bus.read() & 0B11111111, self.__internal_bus.read() & 0B11111111, self.__alu_mux.get() & 0B11111111)
         # All outputs have been processed and now we will read from things
         # The IR is set by default when there is data on the data out bus
         self.process_alu_control()
+        print(19)
         if (self.__control_bus.read_control_bus() & PC_LD) >> 10:
-            if (self.__control_bus.read_control_bus() & ZERO_FLAG) >> 12:
+            print(21)
+            if (self.__control_bus.read_control_bus() & ZERO_FLAG) >> 14:
+                print(22)
                 if self.__zero_flag:
-                    self.__program_counter.insert(self.__internal_bus.read())
-            elif (self.__control_bus.read_control_bus() & NOT_ZERO_FLAG) >> 13:
+                    print(23, self.__internal_bus.read() & 0B11111111)
+                    self.__program_counter.insert(self.__internal_bus.read() & 0B11111111)
+            elif (self.__control_bus.read_control_bus() & NOT_ZERO_FLAG) >> 15:
+                print(24)
                 if not self.__zero_flag:
-                    self.__program_counter.insert(self.__internal_bus.read())
+                    self.__program_counter.insert(self.__internal_bus.read() & 0B11111111)
+                    print(25, self.__internal_bus.read() & 0B11111111)
             else:
-                self.__program_counter.insert(self.__internal_bus.read())
-        if (self.__control_bus.read_control_bus() & RAM_WR) >> 2:
+                print(26, self.__program_counter.get(), self.__internal_bus.read() & 0B11111111)
+                self.__program_counter.insert(self.__internal_bus.read() & 0B11111111)
+        if (self.__control_bus.read_control_bus() & RAM_WR) >> 1:
+            print(27, self.__addr_mux.get(), self.__data_in_bus.read())
             self.__memory.insert(self.__addr_mux.get(), self.__data_in_bus.read())
+        return False
 
     def gui(self):
         window = tk.Tk()
