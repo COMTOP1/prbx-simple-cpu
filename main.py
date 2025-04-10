@@ -335,16 +335,11 @@ class Run:
                 if self.process_control_bus():
                     run = False
             i += 1
-        # while run and i < max_run:
-        #
-        #     i += 1
-        print(self.__memory.get(100))
-        print(self.__memory.get(101))
-        print(self.__memory.get(103))
-        print(self.__memory.get(104))
-        print(self.__memory.get(105))
-        print(self.__memory.get(106))
-        print(self.__memory.get(107))
+        print("ADDM", self.__memory.get(104))
+        print("SUBM", self.__memory.get(105))
+        print("SUB", self.__memory.get(106))
+        print("ADD", self.__memory.get(107))
+        print("AND", self.__memory.get(108))
         return
         for instruction in parsed:
             if instruction.split(" ")[0] == "MOVE":
