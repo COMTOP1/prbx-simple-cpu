@@ -1,5 +1,6 @@
-from sections.control_bus import IR_WR, ACC_CTL0, ACC_CTL1, ACC_CTL2, PC_EN, ACC_EN, DATA_SEL, ADDR_SEL, RAM_EN, \
-    RAM_WR, PC_LD, ZERO_FLAG, NOT_ZERO_FLAG, ControlLine, PC_INC, HALT_FLAG, ACC_WR
+from sections.control_bus import IR_WR, ACC_CTL0, ACC_CTL1, ACC_CTL2, PC_EN, ACC_EN, DATA_SEL, \
+    ADDR_SEL, RAM_EN, RAM_WR, PC_LD, ZERO_FLAG, NOT_ZERO_FLAG, ControlLine, PC_INC, HALT_FLAG, \
+    ACC_WR
 
 type Instruction = list[ControlLine]
 
