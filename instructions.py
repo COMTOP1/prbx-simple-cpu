@@ -7,13 +7,13 @@ MOVE: Instruction =     [RAM_EN | PC_EN | IR_WR,
                          ACC_CTL2 | ACC_WR,
                          PC_INC]
 ADD: Instruction =      [RAM_EN | PC_EN | IR_WR,
-                         ACC_WR,
+                         ACC_WR | ACC_EN,
                          PC_INC]
 SUB: Instruction =      [RAM_EN | PC_EN | IR_WR,
-                         ACC_CTL0 | ACC_WR,
+                         ACC_CTL0 | ACC_WR | ACC_EN,
                          PC_INC]
 AND: Instruction =      [RAM_EN | PC_EN | IR_WR,
-                         ACC_CTL1 | ACC_WR,
+                         ACC_CTL1 | ACC_WR | ACC_EN,
                          PC_INC]
 LOAD: Instruction =     [RAM_EN | PC_EN | IR_WR,
                          ADDR_SEL | RAM_EN | DATA_SEL | ACC_CTL2 | ACC_WR,
