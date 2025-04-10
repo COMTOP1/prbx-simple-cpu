@@ -176,24 +176,27 @@ class Run:
 
     def cli(self):
         print('cli')
-        parsed = parser('''MOVE 5
+        parsed = parser('''MOVE 150
         STORE 101
-        MOVE 2
+        MOVE 20
         STORE 102
-        MOVE 6
+        MOVE 100
         STORE 103
         LOAD 101
         ADDM 103
-        SUBM 102
         STORE 104
-        JUMPNZ 8
-        HALT
-        SUB 1
+        SUBM 102
         STORE 105
-        ADD 2
+        JUMPNZ 13
+        JUMPU 21
+        SUB 11
         STORE 106
-        AND 8
+        ADD 23
         STORE 107
+        AND 231
+        STORE 108
+        MOVE 0
+        JUMPZ 11
         HALT''')
         i = 0
         print(len(parsed))
