@@ -65,24 +65,42 @@ class Run:
         self.__address_bus.clear()
         self.__internal_bus.clear()
 
+    def insert_into_accumulator(self, value: int):
+        if (self.__control_bus.read_control_bus() & ACC_WR) >> 8:
+            print(100, value)
+            self.__accumulator.insert(value)
+
     def process_alu_control(self):
-        if not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
-            self.__accumulator.insert(self.__alu_mux.get() + self.__data_in_bus.read() & 0b11111111)
-        if not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
-            self.__accumulator.insert(self.__alu_mux.get() - self.__data_in_bus.read() & 0b11111111)
-        if not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
-            self.__accumulator.insert(self.__alu_mux.get() & self.__data_in_bus.read() & 0b11111111)
-        if not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
+        print(1)
+        if not ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and not ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and not ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
+            self.insert_into_accumulator((self.__data_in_bus.read() + self.__alu_mux.get()) & 0b11111111)
+            print(2, self.__data_in_bus.read(), self.__alu_mux.get())
+            print(self.__accumulator.get())
+        elif not ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and not ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
+            self.insert_into_accumulator((self.__data_in_bus.read() - self.__alu_mux.get()) & 0b11111111)
+            print(3, self.__data_in_bus.read(), self.__alu_mux.get())
+        elif not ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and not ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
+            self.insert_into_accumulator((self.__alu_mux.get() & self.__data_in_bus.read()) & 0b11111111)
+            print(4)
+        elif not ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
             empty_function()
-        if (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
-            self.__accumulator.insert(self.__alu_mux.get() & 0b11111111)
-        if (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and not(self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
+            print(5)
+        elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and not ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and not ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
+            self.insert_into_accumulator(self.__alu_mux.get() & 0b11111111)
+            print(6)
+        elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and not ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
             empty_function()
-        if (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
+            print(7)
+        elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and not ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
             empty_function()
-        if (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7 and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6 and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5:
+            print(8)
+        elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
             empty_function()
+            print(9)
+        else:
+            print(1010101)
         self.__zero_flag = self.__accumulator.get() == 0
+        print(9.5, self.__zero_flag, self.__accumulator.get())
 
     def process_control_bus(self):
         self.__set_control_defaults()
