@@ -1,6 +1,15 @@
 type ControlLine = int
 
-PC_EN: ControlLine =    0B00100000000000
+NOT_ZERO_FLAG: ControlLine =    0B01000000000000000
+"""
+NOT_ZERO_FLAG - Internal not zero flag (0X8000)
+"""
+ZERO_FLAG: ControlLine =        0B00100000000000000
+"""
+ZERO_FLAG - Internal zero flag (0X4000)
+"""
+
+PC_EN: ControlLine =            0B00010000000000000
 """
 PC_EN - Program Counter enable
 
@@ -75,15 +84,6 @@ ROM_EN: ControlLine =   0B00000000000001
 ROM_EN - ROM enable
 
 The RAM outputs to the Data Out Bus (not used)
-"""
-
-ZERO_FLAG: ControlLine =    0B01000000000000
-"""
-ZERO_FLAG - Internal zero flag
-"""
-NOT_ZERO_FLAG: ControlLine =    0B10000000000000
-"""
-NOT_ZERO_FLAG - Internal not zero flag
 """
 
 class ControlBus:
