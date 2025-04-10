@@ -100,7 +100,7 @@ class Run:
             empty_function()
             # print(9)
         else:
-            print(1010101)
+            raise ValueError(f"Invalid ALU control combination: ACC_CTL2: {(self.__control_bus.read_control_bus() & ACC_CTL2) >> 7}, ACC_CTL1: {(self.__control_bus.read_control_bus() & ACC_CTL1) >> 6}, ACC_CTL0: {(self.__control_bus.read_control_bus() & ACC_CTL0) >> 5}")
         self.__zero_flag = self.__accumulator.get() == 0
         # print(9.5, self.__zero_flag, self.__accumulator.get())
 
