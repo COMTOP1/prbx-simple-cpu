@@ -1,5 +1,9 @@
 type ControlLine = int
 
+HALT_FLAG: ControlLine =        0B10000000000000000
+"""
+HALT_FLAG - stops the program (0X10000)
+"""
 NOT_ZERO_FLAG: ControlLine =    0B01000000000000000
 """
 NOT_ZERO_FLAG - Internal not zero flag (0X8000)
