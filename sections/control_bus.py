@@ -19,7 +19,13 @@ PC_EN - Program Counter enable
 
 The Program Counter outputs to the Address Bus
 """
-PC_LD: ControlLine =    0B00010000000000
+PC_INC: ControlLine =           0B00001000000000000
+"""
+PC_INC - Program Counter increment (0X1000)
+
+The Program Counter will increment it's value
+"""
+PC_LD: ControlLine =            0B00000100000000000
 """
 PC_LD - Program Counter load
 
