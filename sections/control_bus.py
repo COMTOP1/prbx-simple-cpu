@@ -43,7 +43,13 @@ ACC_EN - Accumulator enable
 
 The Accumulator outputs to the Data In Bus
 """
-ACC_CTL2: ControlLine = 0B00000010000000
+ACC_WR: ControlLine =           0B00000000100000000
+"""
+ACC_WR - Accumulator write enable (0X100)
+
+The Accumulator can be written to
+"""
+ACC_CTL2: ControlLine =         0B00000000010000000
 """
 ACC_CTL2 - ALU control line 2
 
