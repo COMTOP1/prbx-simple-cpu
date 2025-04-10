@@ -1,38 +1,42 @@
-from sections.control_bus import IR_EN, ACC_CTL0, ACC_CTL1, ACC_CTL2, ROM_EN, PC_EN, ACC_EN, DATA_SEL, ADDR_SEL, RAM_EN, \
-    RAM_WR, PC_LD, ZERO_FLAG, NOT_ZERO_FLAG, ControlLine
+from sections.control_bus import IR_WR, ACC_CTL0, ACC_CTL1, ACC_CTL2, PC_EN, ACC_EN, DATA_SEL, ADDR_SEL, RAM_EN, \
+    RAM_WR, PC_LD, ZERO_FLAG, NOT_ZERO_FLAG, ControlLine, PC_INC, HALT_FLAG, ACC_WR
 
 type Instruction = list[ControlLine]
 
-MOVE: Instruction = [IR_EN | ACC_CTL2 | ROM_EN,
-                     PC_EN | ACC_CTL2,
-                     ACC_EN | ACC_CTL2]
-ADD: Instruction  = [IR_EN | ROM_EN,
-                     PC_EN,
-                     ACC_EN]
-SUB: Instruction  = [IR_EN | ACC_CTL0 | ROM_EN,
-                     PC_EN | ACC_CTL0,
-                     ACC_EN | ACC_CTL0]
-AND: Instruction = [IR_EN | ACC_CTL1 | ROM_EN,
-                    PC_EN | ACC_CTL1,
-                    ACC_EN | ACC_CTL1]
-LOAD: Instruction = [IR_EN | ACC_CTL2 | DATA_SEL | ROM_EN,
-                     PC_EN | ACC_CTL2 | ADDR_SEL | DATA_SEL | RAM_EN,
-                     ACC_EN | ACC_CTL2 | ADDR_SEL | DATA_SEL | RAM_EN]
-STORE: Instruction = [IR_EN | ROM_EN,
-                      PC_EN | ADDR_SEL | RAM_WR | RAM_EN,
-                      ADDR_SEL | RAM_EN]
-ADDM: Instruction = [IR_EN | DATA_SEL | ROM_EN,
-                     PC_EN | ADDR_SEL | DATA_SEL | RAM_EN,
-                     ACC_EN | ADDR_SEL | DATA_SEL | RAM_EN]
-SUBM: Instruction = [IR_EN | ACC_CTL0 | DATA_SEL | ROM_EN,
-                     PC_EN | ACC_CTL0 | ADDR_SEL | DATA_SEL | RAM_EN,
-                     ACC_EN | ACC_CTL0 | ADDR_SEL | DATA_SEL | RAM_EN]
-JUMPU: Instruction = [IR_EN | ROM_EN,
-                      IR_EN | PC_LD]
-JUMPZ: Instruction = [IR_EN | ROM_EN,
-                      IR_EN | ZERO_FLAG | PC_LD]
-JUMPNZ: Instruction = [IR_EN | ROM_EN,
-                      IR_EN | NOT_ZERO_FLAG | PC_LD]
+MOVE: Instruction =     [RAM_EN | PC_EN | IR_WR,
+                         ACC_CTL2 | ACC_WR,
+                         PC_INC]
+ADD: Instruction =      [RAM_EN | PC_EN | IR_WR,
+                         ACC_WR,
+                         PC_INC]
+SUB: Instruction =      [RAM_EN | PC_EN | IR_WR,
+                         ACC_CTL0 | ACC_WR,
+                         PC_INC]
+AND: Instruction =      [RAM_EN | PC_EN | IR_WR,
+                         ACC_CTL1 | ACC_WR,
+                         PC_INC]
+LOAD: Instruction =     [RAM_EN | PC_EN | IR_WR,
+                         ADDR_SEL | RAM_EN | DATA_SEL | ACC_CTL2 | ACC_WR,
+                         PC_INC]
+STORE: Instruction =    [RAM_EN | PC_EN | IR_WR,
+                         ADDR_SEL | RAM_WR | ACC_EN,
+                         PC_INC]
+ADDM: Instruction =     [RAM_EN | PC_EN | IR_WR,
+                         ADDR_SEL | RAM_EN | ACC_WR | DATA_SEL | ACC_EN,
+                         PC_INC]
+SUBM: Instruction =     [RAM_EN | PC_EN | IR_WR,
+                         ADDR_SEL | RAM_EN | ACC_WR | DATA_SEL | ACC_EN | ACC_CTL0,
+                         PC_INC]
+JUMPU: Instruction =    [RAM_EN | PC_EN | IR_WR,
+                         PC_LD]
+JUMPZ: Instruction =    [RAM_EN | PC_EN | IR_WR,
+                         PC_INC,  # Added if it is not zero then it will proceed
+                         ZERO_FLAG | PC_LD]
+JUMPNZ: Instruction =   [RAM_EN | PC_EN | IR_WR,
+                         PC_INC,  # Added if it is zero then it will proceed
+                         NOT_ZERO_FLAG | PC_LD]
+HALT: Instruction =     [RAM_EN | PC_EN | IR_WR,
+                         HALT_FLAG]
 
 INSTRUCTIONS: list[Instruction] = [
     MOVE,
@@ -46,4 +50,5 @@ INSTRUCTIONS: list[Instruction] = [
     JUMPU,
     JUMPZ,
     JUMPNZ,
+    HALT,
 ]
