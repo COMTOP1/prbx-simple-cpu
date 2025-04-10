@@ -205,9 +205,10 @@ class Run:
             # self.__control_bus.add_control(memory)
             # self.process_control_bus()
             i += 1
-        max_run = 50
+        run = True
+        max_runs = 1000
         i = 0
-        while i < max_run:
+        while i < max_runs and run:
             mem_val = self.__memory.get(self.__program_counter.get())
             print(self.__program_counter.get(), "0x"+format(mem_val, '0{}x'.format(4)))
             if (mem_val >> 12) == 0X0:
@@ -240,7 +241,7 @@ class Run:
                 self.__control_bus.clear()
                 self.__control_bus.add_control(instructions)
                 if self.process_control_bus():
-                    i = max_run
+                    run = False
             i += 1
         # while run and i < max_run:
         #
