@@ -167,12 +167,105 @@ class Run:
 
     def gui(self):
         window = tk.Tk()
-        window.title('SimpleCPU')
-        label = tk.Label(text="This is a pain!")
-        label.pack()
+        # window.title('SimpleCPU')
+        # label = tk.Label(text="This is a pain!")
+        # label.pack()
         #
-        # window.mainloop()
         print('gui')
+        self.root = window
+        self.root.title("CPU Emulator")
+        self.root.configure(bg="white")
+        self.canvas = tk.Canvas(self.root, width=1000, height=700, bg="white", highlightthickness=0)
+        self.canvas.pack()
+        self.draw_components()
+        self.draw_connections()
+        self.create_memory_display()
+        self.root.mainloop()
+
+    def create_memory_display(self):
+        frame = tk.Frame(self.root, bg="white")
+        frame.place(x=720, y=320, width=180, height=300)
+
+        canvas = tk.Canvas(frame, bg="white", highlightthickness=0)
+        scrollbar = tk.Scrollbar(frame, orient="vertical", command=canvas.yview)
+        scroll_frame = tk.Frame(canvas, bg="white")
+
+        scroll_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(
+                scrollregion=canvas.bbox("all")
+            )
+        )
+
+        canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        # Dummy memory content for display
+        for i in range(256):
+            addr = f"{i:03}"
+            data = f"{'00000000':>8}"  # Replace with real memory lookup
+            row = tk.Frame(scroll_frame, bg="white")
+            tk.Label(row, text=addr, width=5, anchor="w", font=("Courier", 9), bg="white").pack(side="left")
+            tk.Label(row, text=data, width=10, anchor="w", font=("Courier", 9), bg="white").pack(side="left")
+            row.pack(anchor="w")
+
+    def draw_components(self):
+        # Boxes: label, x1, y1, x2, y2
+        boxes = [
+            ("Instruction Register (IR)", 100, 100, 220, 160),
+            ("Control Logic", 60, 250, 180, 310),
+            ("ALU", 230, 300, 330, 370),
+            ("MUX 0", 190, 200, 240, 260),
+            ("MUX 1", 420, 260, 470, 310),
+            ("Program Counter (PC)", 480, 200, 600, 260),
+            ("Accumulator (ACC)", 230, 390, 330, 440),
+            ("Zero", 340, 390, 390, 440),
+            # ("MEMORY", 720, 120, 900, 300),
+        ]
+        for label, x1, y1, x2, y2 in boxes:
+            self.canvas.create_rectangle(x1, y1, x2, y2, width=3, fill="#f0f0f0")
+            self.canvas.create_text((x1+x2)//2, (y1+y2)//2, text=label, font=("Helvetica", 10, "bold"))
+
+    def draw_connections(self):
+        # Line colors
+        colors = {
+            "data": "#4da6ff",        # Blue
+            "address": "#99ff99",     # Light green
+            "control": "#ff4d4d",     # Red
+            "internal": "#b366ff"     # Purple
+        }
+
+        line_width = 4
+
+        # Data Bus (data_out_bus and data_in_bus)
+        self.hline(220, 130, 720, colors["data"], line_width)   # IR to Memory (data_out)
+        self.hline(330, 410, 720, colors["data"], line_width)   # ACC to Memory (data_in)
+
+        # Address Bus
+        self.vline(470, 285, 310, colors["address"], line_width)   # MUX to PC
+        self.hline(470, 285, 720, colors["address"], line_width)   # to Memory
+
+        # Internal Bus (from IR to MUXs, ALU)
+        self.vline(160, 160, 200, colors["internal"], line_width)
+        self.hline(160, 200, 190, colors["internal"], line_width)
+        self.vline(600, 230, 260, colors["internal"], line_width)
+        self.hline(600, 260, 720, colors["internal"], line_width)
+
+        # Control Bus
+        self.vline(120, 310, 440, colors["control"], line_width)
+        self.hline(120, 440, 230, colors["control"], line_width)
+        self.hline(120, 320, 470, colors["control"], line_width)
+        self.hline(120, 330, 330, colors["control"], line_width)
+        self.hline(120, 340, 390, colors["control"], line_width)
+
+    def hline(self, x1, y1, x2, color, width):
+        self.canvas.create_line(x1, y1, x2, y1, fill=color, width=width)
+
+    def vline(self, x1, y1, y2, color, width):
+        self.canvas.create_line(x1, y1, x1, y2, fill=color, width=width)
 
     def cli(self):
         print('cli')
