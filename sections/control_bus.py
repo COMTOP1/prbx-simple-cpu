@@ -46,7 +46,7 @@ ADDR_SEL: ControlLine = 0B00000000010000
 """
 ADDR_SEL - Address mux selector
 
-Signal 0 passes the Program Counter to the Address Bus
+Signal 0 passes the Program Counter to the Address Bus (unset)
 
 Signal 1 passes the Internal Bus to the Address Bus
 """
@@ -54,7 +54,7 @@ DATA_SEL: ControlLine = 0B00000000001000
 """
 DATA_SEL - Data mux selector
 
-Signal 0 passes the Internal Bus to the ALU
+Signal 0 passes the Internal Bus to the ALU (unset)
 
 Signal 1 passes the Data Out Bus to the ALU
 """
