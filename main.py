@@ -176,6 +176,93 @@ class Run:
 
     def cli(self):
         print('cli')
+        parsed = parser('''MOVE 5
+        STORE 101
+        MOVE 2
+        STORE 102
+        MOVE 6
+        STORE 103
+        LOAD 101
+        ADDM 103
+        SUBM 102
+        STORE 104
+        JUMPNZ 8
+        HALT
+        SUB 1
+        STORE 105
+        ADD 2
+        STORE 106
+        AND 8
+        STORE 107
+        HALT''')
+        i = 0
+        print(len(parsed))
+        while i < len(parsed):
+            self.__memory.insert(i, parsed[i])
+            hex_string = format(parsed[i], '0{}x'.format(4))
+            print(i, "0x"+hex_string)
+            # self.__control_bus.clear()
+            # self.__control_bus.add_control(memory)
+            # self.process_control_bus()
+            i += 1
+        max_run = 50
+        i = 0
+        while i < max_run:
+            mem_val = self.__memory.get(self.__program_counter.get())
+            print(self.__program_counter.get(), "0x"+format(mem_val, '0{}x'.format(4)))
+            if (mem_val >> 12) == 0X0:
+                instruction = MOVE
+            elif (mem_val >> 12) == 0X1:
+                instruction = ADD
+            elif (mem_val >> 12) == 0X2:
+                instruction = SUB
+            elif (mem_val >> 12) == 0X3:
+                instruction = AND
+            elif (mem_val >> 12) == 0X4:
+                instruction = LOAD
+            elif (mem_val >> 12) == 0X5:
+                instruction = STORE
+            elif (mem_val >> 12) == 0X6:
+                instruction = ADDM
+            elif (mem_val >> 12) == 0X7:
+                instruction = SUBM
+            elif (mem_val >> 12) == 0X8:
+                instruction = JUMPU
+            elif (mem_val >> 12) == 0X9:
+                instruction = JUMPZ
+            elif (mem_val >> 12) == 0XA:
+                instruction = JUMPNZ
+            elif (mem_val >> 12) == 0XF:
+                instruction = HALT
+            else:
+                raise ValueError("Invalid instruction:", "0x"+format(mem_val, '0{}x'.format(4)))
+            for instructions in instruction:
+                self.__control_bus.clear()
+                self.__control_bus.add_control(instructions)
+                if self.process_control_bus():
+                    i = max_run
+            i += 1
+        # while run and i < max_run:
+        #
+        #     i += 1
+        print(self.__memory.get(100))
+        print(self.__memory.get(101))
+        print(self.__memory.get(103))
+        print(self.__memory.get(104))
+        print(self.__memory.get(105))
+        print(self.__memory.get(106))
+        print(self.__memory.get(107))
+        return
+        for instruction in parsed:
+            if instruction.split(" ")[0] == "MOVE":
+                for micro in MOVE:
+                    self.__control_bus.clear()
+                    self.__control_bus.add_control(micro)
+                    self.process_control_bus()
+                    print(micro)
+            elif instruction.split(" ")[0] == "ADDM":
+                for micro in ADDM:
+                    print(micro)
 
     def run(self):
         if self.__args.gui_simulator:
