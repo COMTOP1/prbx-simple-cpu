@@ -32,5 +32,4 @@ class Mux:
     def get(self):
         if self.__control_input == 0:
             return self.__input_0
-        else:
-            return self.__input_1
+        return self.__input_1

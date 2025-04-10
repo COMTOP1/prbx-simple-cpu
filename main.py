@@ -4,8 +4,9 @@ import tkinter as tk
 from instructions import MOVE, ADD, SUB, AND, LOAD, STORE, ADDM, SUBM, JUMPU, JUMPZ, JUMPNZ, HALT
 from parser import parser
 from sections.accumulator import Accumulator
-from sections.control_bus import ControlBus, PC_EN, IR_WR, ACC_EN, RAM_EN, PC_LD, ACC_CTL2, ACC_CTL1, ACC_CTL0, \
-    ADDR_SEL, DATA_SEL, RAM_WR, ZERO_FLAG, NOT_ZERO_FLAG, PC_INC, HALT_FLAG, ACC_WR
+from sections.control_bus import ControlBus, PC_EN, IR_WR, ACC_EN, RAM_EN, PC_LD, ACC_CTL2, \
+    ACC_CTL1, ACC_CTL0, ADDR_SEL, DATA_SEL, RAM_WR, ZERO_FLAG, NOT_ZERO_FLAG, PC_INC, \
+    HALT_FLAG, ACC_WR
 from sections.data_bus import DataBus
 from sections.instruction_register import InstructionRegister
 from sections.memory import Memory
@@ -17,9 +18,10 @@ def empty_function():
     pass
 
 class Run:
-    __parser = argparse.ArgumentParser(prog='Simple CPU instruction set simulator',
-                                       description='Simple CPU instruction set simulator is a teaching tool showing ' +
-                                                   'how a CPU operates and assembly is executed')
+    __parser = argparse.ArgumentParser(
+        prog='Simple CPU instruction set simulator',
+        description='Simple CPU instruction set simulator is a teaching tool showing ' +
+                    'how a CPU operates and assembly is executed')
 
     __memory: Memory
     __control_bus: ControlBus
@@ -39,9 +41,9 @@ class Run:
     def __init__(self):
         simulator_presenting_group = self.__parser.add_mutually_exclusive_group()
         simulator_presenting_group.add_argument("-cli", "--cli-simulator",
-                                                help="Selecting command line simulator", action='store_true')
+                help="Selecting command line simulator", action='store_true')
         simulator_presenting_group.add_argument("-gui", "--gui-simulator",
-                                                help="Selecting graphical simulator", action='store_true')
+                help="Selecting graphical simulator", action='store_true')
 
         self.__args = self.__parser.parse_args()
 
@@ -74,33 +76,55 @@ class Run:
 
     def process_alu_control(self):
         # print(1)
-        if not ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and not ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and not ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
-            self.insert_into_accumulator((self.__data_in_bus.read() + self.__alu_mux.get()) & 0b11111111)
+        if (not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
+                and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
+                and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
+            self.insert_into_accumulator(
+                (self.__data_in_bus.read() + self.__alu_mux.get()) & 0b11111111)
             # print(2, self.__data_in_bus.read(), self.__alu_mux.get())
             # print(self.__accumulator.get())
-        elif not ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and not ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
-            self.insert_into_accumulator((self.__data_in_bus.read() - self.__alu_mux.get()) & 0b11111111)
+        elif (not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
+              and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
+              and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
+            self.insert_into_accumulator(
+                (self.__data_in_bus.read() - self.__alu_mux.get()) & 0b11111111)
             # print(3, self.__data_in_bus.read(), self.__alu_mux.get())
-        elif not ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and not ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
-            self.insert_into_accumulator((self.__alu_mux.get() & self.__data_in_bus.read()) & 0b11111111)
+        elif (not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
+              and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
+              and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
+            self.insert_into_accumulator(
+                (self.__alu_mux.get() & self.__data_in_bus.read()) & 0b11111111)
             # print(4)
-        elif not ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
+        elif (not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
+              and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
+              and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
             empty_function()
             # print(5)
-        elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and not ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and not ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
+        elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
+              and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
+              and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
             self.insert_into_accumulator(self.__alu_mux.get() & 0b11111111)
             # print(6)
-        elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and not ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
+        elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
+              and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
+              and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
             empty_function()
             # print(7)
-        elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and not ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
+        elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
+              and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
+              and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
             empty_function()
             # print(8)
-        elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7) and ((self.__control_bus.read_control_bus() & ACC_CTL1) >> 6) and ((self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
+        elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
+              and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
+              and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
             empty_function()
             # print(9)
         else:
-            raise ValueError(f"Invalid ALU control combination: ACC_CTL2: {(self.__control_bus.read_control_bus() & ACC_CTL2) >> 7}, ACC_CTL1: {(self.__control_bus.read_control_bus() & ACC_CTL1) >> 6}, ACC_CTL0: {(self.__control_bus.read_control_bus() & ACC_CTL0) >> 5}")
+            raise ValueError(f"Invalid ALU control combination: "
+                 f"ACC_CTL2: {(self.__control_bus.read_control_bus() & ACC_CTL2) >> 7}, "
+                 f"ACC_CTL1: {(self.__control_bus.read_control_bus() & ACC_CTL1) >> 6}, "
+                 f"ACC_CTL0: {(self.__control_bus.read_control_bus() & ACC_CTL0) >> 5}")
         self.__zero_flag = self.__accumulator.get() == 0
         # print(9.5, self.__zero_flag, self.__accumulator.get())
 
@@ -302,7 +326,7 @@ class Run:
         i = 0
         while i < max_runs and run:
             mem_val = self.__memory.get(self.__program_counter.get())
-            print(self.__program_counter.get(), "0x"+format(mem_val, '0{}x'.format(4)))
+            print(f"{self.__program_counter.get()} 0x{mem_val:04x}")
             if (mem_val >> 12) == 0X0:
                 instruction = MOVE
             elif (mem_val >> 12) == 0X1:
@@ -328,7 +352,7 @@ class Run:
             elif (mem_val >> 12) == 0XF:
                 instruction = HALT
             else:
-                raise ValueError("Invalid instruction:", "0x"+format(mem_val, '0{}x'.format(4)))
+                raise ValueError(f"Invalid instruction: 0x{mem_val:04x}")
             for instructions in instruction:
                 self.__control_bus.clear()
                 self.__control_bus.add_control(instructions)
