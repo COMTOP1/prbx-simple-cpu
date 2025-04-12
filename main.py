@@ -181,19 +181,17 @@ class Run:
         top_frame = tk.Frame(root)
         top_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        canvas = tk.Canvas(frame, bg="white", highlightthickness=0)
-        scrollbar = tk.Scrollbar(frame, orient="vertical", command=canvas.yview)
-        scroll_frame = tk.Frame(canvas, bg="white")
+        # --- Canvas area ---
+        canvas_frame = tk.Frame(top_frame)
+        canvas_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        scroll_frame.bind(
-            "<Configure>",
-            lambda e: canvas.configure(
-                scrollregion=canvas.bbox("all")
-            )
-        )
+        canvas = tk.Canvas(canvas_frame, bg="white", width=1000, height=600)
+        canvas.pack(fill=tk.BOTH, expand=True)
 
-        canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
-        canvas.configure(yscrollcommand=scrollbar.set)
+        cpu_blocks = CPUBlockDiagram(canvas)
+        cpu_blocks.draw_all_blocks()
+        connections = CPUConnections(canvas)
+        connections.draw_connections()
 
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
