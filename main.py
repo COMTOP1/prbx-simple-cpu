@@ -333,17 +333,6 @@ class Run:
         print("SUB", self.__memory.get(106))
         print("ADD", self.__memory.get(107))
         print("AND", self.__memory.get(108))
-        return
-        for instruction in parsed:
-            if instruction.split(" ")[0] == "MOVE":
-                for micro in MOVE:
-                    self.__control_bus.clear()
-                    self.__control_bus.add_control(micro)
-                    self.process_control_bus()
-                    print(micro)
-            elif instruction.split(" ")[0] == "ADDM":
-                for micro in ADDM:
-                    print(micro)
 
     def run(self):
         if self.__args.gui_simulator:
