@@ -177,9 +177,9 @@ class Run:
         root.geometry("1200x800")
         root.configure(bg="black")
 
-    def create_memory_display(self):
-        frame = tk.Frame(self.root, bg="white")
-        frame.place(x=720, y=320, width=180, height=300)
+        # === Top frame to hold canvas and memory ===
+        top_frame = tk.Frame(root)
+        top_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
         canvas = tk.Canvas(frame, bg="white", highlightthickness=0)
         scrollbar = tk.Scrollbar(frame, orient="vertical", command=canvas.yview)
