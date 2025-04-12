@@ -8,7 +8,7 @@ def __raw_parser(raw_asm: str) -> list[str]:
     trimmed4 = re.sub('\\s{2,}', ' ', trimmed3)
     return trimmed4.upper().strip().split('\n')
 
-def parser(raw_asm: str) -> list[int]:
+def parser(raw_asm: str) -> (list[str], list[int]):
     returning_memory: list[int] = []
     parsed_list = __raw_parser(raw_asm)
     for instruction in parsed_list:
@@ -98,4 +98,4 @@ def parser(raw_asm: str) -> list[int]:
         else:
             raise ValueError(f"Unsupported instruction: {split_instruction}")
         returning_memory.append(memory_value)
-    return returning_memory
+    return parsed_list, returning_memory
