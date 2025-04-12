@@ -335,7 +335,7 @@ class Run:
                 instruction = HALT
             else:
                 raise ValueError(f"Invalid instruction: 0x{mem_val:04x}")
-            for instructions in instruction:
+            for instructions, desc in instruction:
                 self.__control_bus.clear()
                 self.__control_bus.add_control(instructions)
                 if self.process_control_bus():
