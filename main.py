@@ -203,14 +203,14 @@ class Run:
         ])
         micro_panel.pack(side=tk.BOTTOM, fill=tk.X)
 
-        # Dummy memory content for display
-        for i in range(256):
-            addr = f"{i:03}"
-            data = f"{'00000000':>8}"  # Replace with real memory lookup
-            row = tk.Frame(scroll_frame, bg="white")
-            tk.Label(row, text=addr, width=5, anchor="w", font=("Courier", 9), bg="white").pack(side="left")
-            tk.Label(row, text=data, width=10, anchor="w", font=("Courier", 9), bg="white").pack(side="left")
-            row.pack(anchor="w")
+        # --- CPU Readout (under canvas) ---
+        readout_frame = CPUReadout(canvas, [
+            ("DATA_OUT_BUS", BITS_16_TYPE), ("DATA_IN_BUS", BITS_16_TYPE),
+            ("INTERNAL_BUS", BITS_16_TYPE), ("ADDRESS_BUS", BITS_8_TYPE),
+            ("ACC", BITS_8_TYPE), ("PC", BITS_8_TYPE), ("IR", BITS_8_TYPE),
+            ("ZERO", BOOL_TYPE)
+        ])
+        readout_frame.pack(side=tk.BOTTOM, fill=tk.X)
 
     def draw_components(self):
         # Boxes: label, x1, y1, x2, y2
