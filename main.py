@@ -264,7 +264,7 @@ class Run:
 
     def cli(self):
         print('cli')
-        parsed = parser('''MOVE 150
+        parsed_instructions, memory = parser('''MOVE 150
         STORE 101
         MOVE 20
         STORE 102
@@ -287,8 +287,8 @@ class Run:
         JUMPZ 11
         HALT''')
         i = 0
-        while i < len(parsed):
-            self.__memory.insert(i, parsed[i])
+        while i < len(memory):
+            self.__memory.insert(i, memory[i])
             i += 1
         run = True
         max_runs = 1000
