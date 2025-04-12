@@ -225,32 +225,42 @@ class Run:
         memory_panel = MemoryView(memory_listbox, memory_size=256)
         memory_panel.pack(side='right', fill='y')
 
-        # Data Bus (data_out_bus and data_in_bus)
-        self.hline(220, 130, 720, colors["data"], line_width)   # IR to Memory (data_out)
-        self.hline(330, 410, 720, colors["data"], line_width)   # ACC to Memory (data_in)
+        # Example update (simulate micro-instruction being active)
+        def simulate_update1():
+            active = {"ACC_EN", "RAM_EN", "PC_INC", "IR_WR"}
+            micro_panel.set_active(active)
+            readout_frame.update_values([
+                ("DATA_OUT_BUS", 0x3F, BITS_16_TYPE),
+                ("DATA_IN_BUS", 0x12, BITS_16_TYPE),
+                ("INTERNAL_BUS", 0xAB, BITS_16_TYPE),
+                ("ADDRESS_BUS", 0x1C, BITS_8_TYPE),
+                ("ACC", 0x4E, BITS_8_TYPE),
+                ("PC", 0x0A, BITS_8_TYPE),
+                ("IR", 0xB2, BITS_8_TYPE),
+                ("ZERO", 1, BOOL_TYPE),
+            ])
+            cpu_blocks.update_block_value([("ACC", "0x11"), ("ZERO", "True"), ("ALU_ACC", "0x32"), ("ADDR_MUX", "1")])
 
-        # Address Bus
-        self.vline(470, 285, 310, colors["address"], line_width)   # MUX to PC
-        self.hline(470, 285, 720, colors["address"], line_width)   # to Memory
+        def simulate_update2():
+            active = {"NOT_ZERO_FLAG", "HALT_FLAG"}
+            micro_panel.set_active(active)
 
-        # Internal Bus (from IR to MUXs, ALU)
-        self.vline(160, 160, 200, colors["internal"], line_width)
-        self.hline(160, 200, 190, colors["internal"], line_width)
-        self.vline(600, 230, 260, colors["internal"], line_width)
-        self.hline(600, 260, 720, colors["internal"], line_width)
+        def simulate_update3():
+            active = {"ACC_CTL0", "ACC_CTL1"}
+            micro_panel.set_active(active)
+            memory_panel.clear_highlight()
 
-        # Control Bus
-        self.vline(120, 310, 440, colors["control"], line_width)
-        self.hline(120, 440, 230, colors["control"], line_width)
-        self.hline(120, 320, 470, colors["control"], line_width)
-        self.hline(120, 330, 330, colors["control"], line_width)
-        self.hline(120, 340, 390, colors["control"], line_width)
+        def simulate_ram():
+            memory_panel.update_value(12, 120)
+            memory_panel.highlight_address(12)
 
-    def hline(self, x1, y1, x2, color, width):
-        self.canvas.create_line(x1, y1, x2, y1, fill=color, width=width)
+        root.after(2000, simulate_update1)
+        root.after(4000, simulate_update2)
+        root.after(6000, simulate_update3)
 
-    def vline(self, x1, y1, y2, color, width):
-        self.canvas.create_line(x1, y1, x1, y2, fill=color, width=width)
+        root.after(3000, simulate_ram)
+
+        root.mainloop()
 
     def cli(self):
         print('cli')
