@@ -35,10 +35,10 @@ SUBM: Instruction =     [(RAM_EN | PC_EN | IR_WR, "Fetch and decode SUBM"),
 JUMPU: Instruction =    [(RAM_EN | PC_EN | IR_WR, "Fetch and decode JUMPU"),
                          (PC_LD, "Moves the contents of the IR into the PC")]
 JUMPZ: Instruction =    [(RAM_EN | PC_EN | IR_WR, "Fetch and decode JUMPZ"),
-                         (PC_INC, "Increment counter incase ACC is not zero"),  # Added if it is not zero then it will proceed
+                         (PC_INC, "Increment counter incase ACC is not zero"),
                          (ZERO_FLAG | PC_LD, "Changes the contents of the PC if the ACC is zero")]
 JUMPNZ: Instruction =   [(RAM_EN | PC_EN | IR_WR, "Fetch and decode JUMPNZ"),
-                         (PC_INC, "Increment counter incase ACC is zero"),  # Added if it is zero then it will proceed
+                         (PC_INC, "Increment counter incase ACC is zero"),
                          (NOT_ZERO_FLAG | PC_LD, "Changes the contents of the PC if the ACC is not zero")]
 HALT: Instruction =     [(RAM_EN | PC_EN | IR_WR, "Fetch and decode HALT"),
                          (HALT_FLAG, "Stops the execution of the program")]
