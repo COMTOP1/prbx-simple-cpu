@@ -172,15 +172,10 @@ class Run:
     def gui(self):
         window = tk.Tk()
         print('gui')
-        self.root = window
-        self.root.title("CPU Emulator")
-        self.root.configure(bg="white")
-        self.canvas = tk.Canvas(self.root, width=1000, height=700, bg="white", highlightthickness=0)
-        self.canvas.pack()
-        self.draw_components()
-        self.draw_connections()
-        self.create_memory_display()
-        self.root.mainloop()
+        root = window
+        root.title("SimpleCPU Emulator")
+        root.geometry("1200x800")
+        root.configure(bg="black")
 
     def create_memory_display(self):
         frame = tk.Frame(self.root, bg="white")
