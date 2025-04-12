@@ -193,8 +193,15 @@ class Run:
         connections = CPUConnections(canvas)
         connections.draw_connections()
 
-        canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
+        # --- Micro-instruction Readout (under canvas) ---
+        micro_panel = MicroInstructionPanel(canvas, [
+            "IR_WR", "ACC_WR", "ACC_EN", "ACC_CTL0", "ACC_CTL1", "ACC_CTL2",
+            "DATA_SEL", "ADDR_SEL",
+            "RAM_EN", "RAM_WR", "PC_EN", "PC_LD", "PC_INC",
+            "ZERO_FLAG", "NOT_ZERO_FLAG",
+            "HALT_FLAG"
+        ])
+        micro_panel.pack(side=tk.BOTTOM, fill=tk.X)
 
         # Dummy memory content for display
         for i in range(256):
