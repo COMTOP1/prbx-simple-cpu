@@ -212,33 +212,18 @@ class Run:
         ])
         readout_frame.pack(side=tk.BOTTOM, fill=tk.X)
 
-    def draw_components(self):
-        # Boxes: label, x1, y1, x2, y2
-        boxes = [
-            ("Instruction Register (IR)", 100, 100, 220, 160),
-            ("Control Logic", 60, 250, 180, 310),
-            ("ALU", 230, 300, 330, 370),
-            ("MUX 0", 190, 200, 240, 260),
-            ("MUX 1", 420, 260, 470, 310),
-            ("Program Counter (PC)", 480, 200, 600, 260),
-            ("Accumulator (ACC)", 230, 390, 330, 440),
-            ("Zero", 340, 390, 390, 440),
-            # ("MEMORY", 720, 120, 900, 300),
-        ]
-        for label, x1, y1, x2, y2 in boxes:
-            self.canvas.create_rectangle(x1, y1, x2, y2, width=3, fill="#f0f0f0")
-            self.canvas.create_text((x1+x2)//2, (y1+y2)//2, text=label, font=("Helvetica", 10, "bold"))
+        # --- Memory display ---
+        memory_frame = tk.Frame(top_frame)
+        memory_frame.pack(side=tk.RIGHT, fill=tk.Y)
 
-    def draw_connections(self):
-        # Line colors
-        colors = {
-            "data": "#4da6ff",        # Blue
-            "address": "#99ff99",     # Light green
-            "control": "#ff4d4d",     # Red
-            "internal": "#b366ff"     # Purple
-        }
+        memory_listbox = tk.Listbox(memory_frame, font=("Courier", 10), width=20)
+        scrollbar = ttk.Scrollbar(memory_frame, orient=tk.VERTICAL, command=memory_listbox.yview)
+        memory_listbox.config(yscrollcommand=scrollbar.set)
+        memory_listbox.pack(side=tk.LEFT, fill=tk.Y)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        line_width = 4
+        memory_panel = MemoryView(memory_listbox, memory_size=256)
+        memory_panel.pack(side='right', fill='y')
 
         # Data Bus (data_out_bus and data_in_bus)
         self.hline(220, 130, 720, colors["data"], line_width)   # IR to Memory (data_out)
