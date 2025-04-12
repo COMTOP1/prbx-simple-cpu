@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from gui.cpu_blocks import CPUBlockDiagram
+from gui.cpu_connections import CPUConnections
 from gui.cpu_readout_panel import CPUReadout, BITS_16_TYPE, BITS_8_TYPE, BOOL_TYPE
 from gui.memory_view_panel import MemoryView
 from gui.micro_instruction_panel import MicroInstructionPanel
