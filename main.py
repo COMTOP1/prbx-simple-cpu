@@ -5,6 +5,7 @@ from tkinter import ttk
 from gui.cpu_blocks import CPUBlockDiagram
 from gui.cpu_connections import CPUConnections
 from gui.cpu_readout_panel import CPUReadout, BITS_16_TYPE, BITS_8_TYPE, BOOL_TYPE
+from gui.instruction_bar import InstructionBar
 from gui.memory_view_panel import MemoryView
 from gui.micro_instruction_panel import MicroInstructionPanel
 from instructions import MOVE, ADD, SUB, AND, LOAD, STORE, ADDM, SUBM, JUMPU, JUMPZ, JUMPNZ, HALT
@@ -170,12 +171,22 @@ class Run:
         return False
 
     def gui(self):
+        def on_step_change(direction):
+            # You'd use this to change the current step and trigger redraws
+            new_step = self.instruction_bar.current_step + direction
+            if 0 <= new_step <= self.instruction_bar.total_steps:
+                self.instruction_bar.update_step(new_step, self.instruction_bar.total_steps)
+                # Add logic to update CPU/memory state here
+                print(f"Changed to step {new_step}")
+
         window = tk.Tk()
         print('gui')
         root = window
         root.title("SimpleCPU Emulator")
         root.geometry("1200x800")
         root.configure(bg="black")
+
+        self.instruction_bar = InstructionBar(root, on_step_change)
 
         # === Top frame to hold canvas and memory ===
         top_frame = tk.Frame(root)
@@ -244,6 +255,8 @@ class Run:
         def simulate_update2():
             active = {"NOT_ZERO_FLAG", "HALT_FLAG"}
             micro_panel.set_active(active)
+            self.instruction_bar.update_instruction("MOVE 2")
+            self.instruction_bar.update_step(5, 31)
 
         def simulate_update3():
             active = {"ACC_CTL0", "ACC_CTL1"}
