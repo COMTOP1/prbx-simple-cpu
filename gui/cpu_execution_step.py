@@ -39,7 +39,7 @@ class CPUExecutionStep:
     step_number: int
     instruction_name: str
     micro_instruction_name: str
+    memory_change_snapshot: tuple[int, int]
     control_lines: Dict[ControlLineName, bool] = field(default_factory=dict)
     component_values: Dict[ComponentName, Any] = field(default_factory=dict)
     bus_values: Dict[BusName, int] = field(default_factory=dict)
-    memory_change_snapshot: Dict[int, int] = field(default_factory=dict)
