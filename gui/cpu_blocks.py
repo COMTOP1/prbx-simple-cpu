@@ -33,8 +33,8 @@ class CPUBlockDiagram:
         self.draw_block("MEMORY", "Memory\n(Right side)", 750, 150, w=140, h=400, colour="grey")
         self.draw_block("ADDR_MUX", "Address\nMux ", 550, 325, w=90, h=120,
                         colour="medium purple", mux=True, x0=555, y0=340, x1=555, y1=430, initial_value="0")
-        self.draw_block("DATA_MUX", "Data\nMux ", 365, 300, w=100, h=60,
-                        colour="medium purple", mux=True, x0=390, y0=330, x1=435, y1=330, initial_value="0")
+        self.draw_block("DATA_MUX", "Data\nMux ", 365, 290, w=100, h=70,
+                        colour="medium purple", mux=True, x0=390, y0=295, x1=435, y1=295, initial_value="0")
         self.draw_block("ZERO", "Zero flag\n", 490, 550, initial_value="False", w=100, h=50,
                         colour="navy")
 
