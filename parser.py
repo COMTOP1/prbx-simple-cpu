@@ -2,11 +2,13 @@ import re
 
 def __raw_parser(raw_asm: str) -> list[str]:
     stripped = (raw_asm + '\n').strip()
-    trimmed1 = re.sub('\t+', '\n', stripped)
-    trimmed2 = re.sub(' {2,}', ' ', trimmed1)
-    trimmed3 = re.sub('\n ', '\n', trimmed2)
-    trimmed4 = re.sub('\\s{2,}', ' ', trimmed3)
-    return trimmed4.upper().strip().split('\n')
+    stripped = re.sub('\t+', '\n', stripped)
+    stripped = re.sub(';.*', '', stripped)
+    stripped = re.sub(' {2,}', ' ', stripped)
+    stripped = re.sub('\n +', '\n', stripped)
+    stripped = re.sub(' +\n', '\n', stripped)
+    stripped = re.sub('\n{2,}', '\n', stripped)
+    return stripped.upper().strip().split('\n')
 
 def parser(raw_asm: str) -> (list[str], list[int]):
     returning_memory: list[int] = []
