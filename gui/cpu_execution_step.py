@@ -34,6 +34,7 @@ PC_INC: ControlLineName = "PC_INC"
 HALT_FLAG: ControlLineName = "HALT_FLAG"
 ACC_WR: ControlLineName = "ACC_WR"
 
+
 @dataclass
 class CPUExecutionStep:
     step_number: int
