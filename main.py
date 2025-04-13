@@ -277,6 +277,9 @@ class Run:
 
     def cli(self):
         print('cli')
+        self.run_emulator()
+
+    def run_emulator(self):
         parsed_instructions, memory = parser('''MOVE 150
         STORE 101
         MOVE 20
