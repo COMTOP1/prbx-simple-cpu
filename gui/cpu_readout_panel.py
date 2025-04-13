@@ -14,7 +14,7 @@ class CPUReadout(tk.Frame):
         i = 0
         while i < len(labels):
             label, readout = labels[i]
-            tk.Label(self, text=label + ":", font=("Courier", 12, "bold")).grid(row=0, column=i * 2, sticky="e",
+            tk.Label(self, text=label + ":", font=("Courier", 11, "bold")).grid(row=0, column=i * 2, sticky="e",
                                                                                 padx=(5, 0))
             text = "0x00"
             if readout == BOOL_TYPE:
@@ -25,8 +25,8 @@ class CPUReadout(tk.Frame):
                 text = "0x00"
             elif readout == BITS_16_TYPE:
                 text = "0x0000"
-            val = tk.Label(self, text=text, width=6, anchor="w", font=("Courier", 12))
-            val.grid(row=0, column=i * 2 + 1, sticky="w", padx=(0, 10))
+            val = tk.Label(self, text=text, width=6, anchor="w", font=("Courier", 11))
+            val.grid(row=0, column=i * 2 + 1, sticky="w", padx=(0, 5))
             self.fields[label] = val
             i += 1
 

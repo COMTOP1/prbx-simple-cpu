@@ -16,15 +16,15 @@ class CPUConnections:
                 capstyle=tk.ROUND)
 
         line([
-            810, 150,
-            810, 25,
+            820, 150,
+            820, 25,
             200, 25,
             200, 50,
             ], "deep sky blue") # Memory -> IR
 
         line([
-            810, 150,
-            810, 25,
+            820, 150,
+            820, 25,
             435, 25,
             435, 325,
         ], "deep sky blue") # Memory -> Data Mux
@@ -38,7 +38,7 @@ class CPUConnections:
         ], "orange") # PC -> Addr Mux
 
         line([
-            630, 385,
+            640, 385,
             750, 385,
         ], "lawn green") # Addr Mux -> Memory
 
@@ -102,6 +102,6 @@ class CPUConnections:
         line([
             350, 625,
             350, 650,
-            810, 650,
-            810, 550,
+            820, 650,
+            820, 550,
         ], "dark blue")  # ACC -> Memory

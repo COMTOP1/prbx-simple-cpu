@@ -290,18 +290,18 @@ class Run:
         print('gui')
         root = tk.Tk()
         root.title("SimpleCPU Emulator")
-        root.geometry("1200x800")
+        root.geometry("1200x850")
         root.configure(bg="black")
 
         # Create a frame for the top bar
-        top_bar = tk.Frame(root, height=40)
+        top_bar = tk.Frame(root, height=40, background="grey16")
         top_bar.pack(fill="x", side="top")
 
         # Create a StringVar to hold the filename
         file_name = tk.StringVar()
 
         # Create a button to open the file explorer
-        open_button = tk.Button(top_bar, text="Open File", command=open_file)
+        open_button = tk.Button(top_bar, text="Open File", command=open_file, background="white", foreground="black")
         open_button.pack(side="left", padx=10)
 
         # Create a label to display the filename
@@ -419,7 +419,6 @@ class Run:
 
     def run_emulator(self, unparsed_instructions: str):
         self.__set_defaults()
-        print(unparsed_instructions)
         parsed_instructions, memory = parser(unparsed_instructions)
         step = 0
         initial_step = CPUExecutionStep(step, "INITIAL", "The initial state of the CPU before execution")

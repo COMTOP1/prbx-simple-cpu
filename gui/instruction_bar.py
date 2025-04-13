@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter.ttk import Style
 from typing import Callable, List
 
 from gui.cpu_execution_step import CPUExecutionStep
@@ -11,20 +12,23 @@ class InstructionBar:
     execution_steps: List[CPUExecutionStep]
 
     def __init__(self, root: tk.Tk, execution_steps: List[CPUExecutionStep], on_step_change: Callable[[int, List[CPUExecutionStep]], None]):
-        self.__frame = ttk.Frame(root)
+        s = Style()
+        s.configure('My.TFrame', background='grey16')
+
+        self.__frame = ttk.Frame(root, style="My.TFrame")
         self.__frame.pack(fill=tk.X, pady=5, side=tk.TOP)
 
         self.__on_step_change = on_step_change
         self.execution_steps = execution_steps
 
-        self.instruction_label = ttk.Label(self.__frame, text=f"Instruction: {execution_steps[0].instruction_name}", font=("Arial", 18, "bold"))
-        self.instruction_label.pack(side=tk.LEFT, padx=10)
+        self.instruction_label = ttk.Label(self.__frame, text=f"Instruction: {execution_steps[0].instruction_name}", font=("Arial", 16, "bold"))
+        self.instruction_label.pack(side=tk.LEFT, padx=(10, 0))
 
-        self.step_label = ttk.Label(self.__frame, text=f"Step: 0 / {len(execution_steps)-1}", font=("Arial", 18))
-        self.step_label.pack(side=tk.LEFT, padx=10)
+        self.step_label = ttk.Label(self.__frame, text=f"Step: 0 / {len(execution_steps)-1}", font=("Arial", 16))
+        self.step_label.pack(side=tk.LEFT, padx=(10, 0))
 
-        self.desc_label = ttk.Label(self.__frame, text=f"Description: {execution_steps[0].micro_instruction_desc}", font=("Arial", 16))
-        self.desc_label.pack(side=tk.LEFT, padx=10)
+        self.desc_label = ttk.Label(self.__frame, text=f"Description: {execution_steps[0].micro_instruction_desc}", font=("Arial", 14))
+        self.desc_label.pack(side=tk.LEFT, padx=(10, 0))
 
         # Navigation buttons
         self.next_button = ttk.Button(self.__frame, text="Next →", command=lambda: self.__on_step_change(1, self.execution_steps))
