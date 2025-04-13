@@ -463,14 +463,6 @@ class Run:
                     run = False
                 execution_steps.append(execution_step)
             i += 1
-        print("ADDM", self.__memory.get(104))
-        print("SUBM", self.__memory.get(105))
-        print("SUB", self.__memory.get(106))
-        print("ADD", self.__memory.get(107))
-        print("AND", self.__memory.get(108))
-        print(step)
-        print(len(execution_steps))
-        print(execution_steps[2].component_values)
         return execution_steps
 
     def run(self):
