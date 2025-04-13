@@ -2,13 +2,15 @@ import argparse
 import tkinter as tk
 from tkinter import ttk
 
+import gui.cpu_execution_step
 from gui.cpu_blocks import CPUBlockDiagram
 from gui.cpu_connections import CPUConnections
-from gui.cpu_readout_panel import CPUReadout, BITS_16_TYPE, BITS_8_TYPE, BOOL_TYPE
+from gui.cpu_execution_step import CPUExecutionStep
+from gui.cpu_readout_panel import CPUReadout, BITS_16_TYPE, BITS_8_TYPE, BOOL_TYPE, BIT_1_TYPE
 from gui.instruction_bar import InstructionBar
 from gui.memory_view_panel import MemoryView
 from gui.micro_instruction_panel import MicroInstructionPanel
-from instructions import MOVE, ADD, SUB, AND, LOAD, STORE, ADDM, SUBM, JUMPU, JUMPZ, JUMPNZ, HALT
+from instructions import MOVE, ADD, SUB, AND, LOAD, STORE, ADDM, SUBM, JUMPU, JUMPZ, JUMPNZ, HALT, INVALID
 from parser import parser
 from sections.accumulator import Accumulator
 from sections.control_bus import ControlBus, PC_EN, IR_WR, ACC_EN, RAM_EN, PC_LD, ACC_CTL2, \
