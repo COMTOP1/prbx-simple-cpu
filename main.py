@@ -337,48 +337,13 @@ class Run:
             self.memory_panel.update_value(initial_address, initial_value)
             self.memory_panel.highlight_address(initial_address)
 
-        # Example update (simulate micro-instruction being active)
-        # def simulate_update1():
-        #     self.micro_panel.set_active({"ACC_EN", "RAM_EN", "PC_INC", "IR_WR"})
-        #     self.readout_frame.update_values([
-        #         ("DATA_OUT_BUS", 0x3F, BITS_16_TYPE),
-        #         ("DATA_IN_BUS", 0x12, BITS_16_TYPE),
-        #         ("INTERNAL_BUS", 0xAB, BITS_16_TYPE),
-        #         ("ADDRESS_BUS", 0x1C, BITS_8_TYPE),
-        #         ("ACC", 0x4E, BITS_8_TYPE),
-        #         ("PC", 0x0A, BITS_8_TYPE),
-        #         ("IR", 0xB2, BITS_8_TYPE),
-        #         ("ZERO", 1, BOOL_TYPE),
-        #     ])
-        #     self.cpu_blocks.update_block_value([("ACC", "0x11"), ("ZERO", "True"), ("ALU_ACC", "0x32"), ("ADDR_MUX", "1")])
-        #
-        # def simulate_update2():
-        #     self.micro_panel.set_active({"NOT_ZERO_FLAG", "HALT_FLAG"})
-        #     self.instruction_bar.update_instruction("MOVE 2")
-        #     self.instruction_bar.update_step(5, 31)
-        #
-        # def simulate_update3():
-        #     self.micro_panel.set_active({"ACC_CTL0", "ACC_CTL1"})
-        #     self.memory_panel.clear_highlight()
-        #
-        # def simulate_ram():
-        #     self.memory_panel.update_value(12, 120)
-        #     self.memory_panel.highlight_address(12)
-        #
-        # root.after(2000, simulate_update1)
-        # root.after(4000, simulate_update2)
-        # root.after(6000, simulate_update3)
-        #
-        # root.after(3000, simulate_ram)
-
         root.mainloop()
 
     def cli(self):
         print('cli')
-        self.run_emulator()
+        self.run_emulator(self.unparsed_instructions)
 
-    def run_emulator(self):
-        parsed_instructions, memory = parser('''MOVE 150
+    unparsed_instructions = '''MOVE 150
         STORE 101
         MOVE 20
         STORE 102
@@ -399,7 +364,35 @@ class Run:
         STORE 108
         MOVE 0
         JUMPZ 11
-        HALT''')
+        HALT'''
+
+    # unparsed_instructions = '''MOVE 5
+    # STORE 30
+    # MOVE 4
+    # STORE 31
+    # MOVE 1
+    # STORE 33
+    # MOVE 0
+    # STORE 34
+    # LOAD 34       ; Clear ACC = 0
+    # STORE 32      ; RESULT = 0
+    # LOAD 31       ; Load B (multiplier)
+    # STORE 35      ; TEMP_COUNTER = B LOOP after
+    # LOAD 35       ; Load counter
+    # JUMPZ 21      ; If zero, we're done
+    # LOAD 32       ; Load current result
+    # ADDM 30       ; Add A (multiplicand)
+    # STORE 32      ; Store back to RESULT
+    # LOAD 35       ; Load counter
+    # SUBM 33       ; Subtract 1
+    # STORE 35      ; Store back
+    # JUMPNZ 12      ; If not zero, continue
+    # HALT'''
+
+    def run_emulator(self, unparsed_instructions: str):
+        self.__set_defaults()
+        print(unparsed_instructions)
+        parsed_instructions, memory = parser(unparsed_instructions)
         step = 0
         initial_step = CPUExecutionStep(step, "INITIAL", "The initial state of the CPU before execution")
         i = 0
