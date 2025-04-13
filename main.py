@@ -339,13 +339,17 @@ class Run:
         MOVE 0
         JUMPZ 11
         HALT''')
+        step = 0
+        initial_step = CPUExecutionStep(step, "INITIAL", "The initial state of the CPU before execution")
         i = 0
         while i < len(memory):
             self.__memory.insert(i, memory[i])
+            initial_step.record_memory_write_snapshot(i, memory[i])
             i += 1
         run = True
         max_runs = 1000
         i = 0
+        execution_steps: list[CPUExecutionStep] = [initial_step]
         while i < max_runs and run:
             mem_val = self.__memory.get(self.__program_counter.get())
             print(f"{self.__program_counter.get()} 0x{mem_val:04x}")
@@ -390,16 +394,23 @@ class Run:
                 instruction_text = f"INVALID - {mem_val}"
             print(instruction_text)
             for instructions, desc in instruction:
+                step += 1
+                execution_step = CPUExecutionStep(step, instruction_text, desc)
                 self.__control_bus.clear()
                 self.__control_bus.add_control(instructions)
                 if self.process_control_bus():
                     run = False
+                execution_steps.append(execution_step)
             i += 1
         print("ADDM", self.__memory.get(104))
         print("SUBM", self.__memory.get(105))
         print("SUB", self.__memory.get(106))
         print("ADD", self.__memory.get(107))
         print("AND", self.__memory.get(108))
+        print(step)
+        print(len(execution_steps))
+        print(execution_steps[2].component_values)
+        return execution_steps
 
     def run(self):
         if self.__args.gui_simulator:
