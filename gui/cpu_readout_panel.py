@@ -45,3 +45,10 @@ class CPUReadout(tk.Frame):
                 display = f"0x{value:04X}"
             self.fields[label].config(text=display)
             i += 1
+
+    def update_values_formatted(self, data: list[tuple[str, str]]):
+        i = 0
+        while i < len(data):
+            label, value = data[i]
+            self.fields[label].config(text=value)
+            i += 1
