@@ -39,7 +39,7 @@ class InstructionBar:
 
     def update_steps(self, execution_steps: list[CPUExecutionStep]):
         self.execution_steps = execution_steps
-        self.total_steps = len(execution_steps)
+        self.total_steps = len(execution_steps) - 1
         self.current_step = 0
         self.next_button.config(command=lambda: self.__on_step_change(1, self.execution_steps))
         self.prev_button.config(command=lambda: self.__on_step_change(-1, self.execution_steps))
