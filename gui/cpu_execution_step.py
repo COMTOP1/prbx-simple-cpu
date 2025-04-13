@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
+
+from gui.cpu_readout_panel import CPUReadoutType, BOOL_TYPE, BIT_1_TYPE, BITS_8_TYPE, BITS_16_TYPE
 
 type BusName = str
 DATA_OUT_BUS: BusName = "DATA_OUT_BUS"
@@ -39,8 +41,52 @@ ACC_WR: ControlLineName = "ACC_WR"
 class CPUExecutionStep:
     step_number: int
     instruction_name: str
-    micro_instruction_name: str
-    memory_change_snapshot: tuple[int, int]
-    control_lines: Dict[ControlLineName, bool] = field(default_factory=dict)
-    component_values: Dict[ComponentName, Any] = field(default_factory=dict)
-    bus_values: Dict[BusName, int] = field(default_factory=dict)
+    micro_instruction_desc: str
+    memory_write_snapshot: Dict[int, int] = field(default_factory=dict)
+    memory_read_snapshot: int = -1
+    control_lines: list[ControlLineName] = field(default_factory=list)
+    component_values: Dict[ComponentName, Tuple[str, int]] = field(default_factory=dict)
+    bus_values: Dict[BusName, Tuple[str, int]] = field(default_factory=dict)
+
+    def __init__(self, step_number: int, instruction_name: str, micro_instruction_desc: str):
+        self.step_number = step_number
+        self.instruction_name = instruction_name
+        self.micro_instruction_desc = micro_instruction_desc
+        self.control_lines = []
+        self.component_values = {}
+        self.memory_write_snapshot = {}
+        self.memory_read_snapshot = -1
+        self.bus_values = {}
+
+    def record_bus(self, name: BusName, value: int, readout_type: CPUReadoutType):
+        display = ""
+        if readout_type == BOOL_TYPE:
+            display = f"{bool(value)}"
+        if readout_type == BIT_1_TYPE:
+            display = f"{value}"
+        elif readout_type == BITS_8_TYPE:
+            display = f"0x{value:02X}"
+        elif readout_type == BITS_16_TYPE:
+            display = f"0x{value:04X}"
+        self.bus_values[name] = (display, value)
+
+    def record_component(self, name: ComponentName, value: Any, readout_type: CPUReadoutType):
+        display = ""
+        if readout_type == BOOL_TYPE:
+            display = f"{bool(value)}"
+        if readout_type == BIT_1_TYPE:
+            display = f"{value}"
+        elif readout_type == BITS_8_TYPE:
+            display = f"0x{value:02X}"
+        elif readout_type == BITS_16_TYPE:
+            display = f"0x{value:04X}"
+        self.component_values[name] = (display, value)
+
+    def record_control_line(self, control_line: ControlLineName):
+        self.control_lines.append(control_line)
+
+    def record_memory_read_snapshot(self, memory_read_snapshot: int):
+        self.memory_read_snapshot = memory_read_snapshot
+
+    def record_memory_write_snapshot(self, address: int, value: int):
+        self.memory_write_snapshot[address] = value
