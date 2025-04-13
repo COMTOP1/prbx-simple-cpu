@@ -42,6 +42,7 @@ JUMPNZ: Instruction =   [(RAM_EN | PC_EN | IR_WR, "Fetch and decode JUMPNZ"),
                          (NOT_ZERO_FLAG | PC_LD, "Changes the contents of the PC if the ACC is not zero")]
 HALT: Instruction =     [(RAM_EN | PC_EN | IR_WR, "Fetch and decode HALT"),
                          (HALT_FLAG, "Stops the execution of the program")]
+INVALID: Instruction =  [(HALT_FLAG, "Invalid instruction in memory, unable to execute further")]
 
 INSTRUCTIONS: list[Instruction] = [
     MOVE,
