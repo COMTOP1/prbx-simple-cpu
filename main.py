@@ -84,77 +84,111 @@ class Run:
         self.__address_bus.clear()
         self.__internal_bus.clear()
 
-    def insert_into_accumulator(self, value: int):
+    def insert_into_accumulator(self, execution_step: CPUExecutionStep, value: int):
+        execution_step.record_bus(gui.cpu_execution_step.ALU_ACC, value, BITS_8_TYPE)
         if (self.__control_bus.read_control_bus() & ACC_WR) >> 8:
             self.__accumulator.insert(value)
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_WR)
 
-    def process_alu_control(self):
+    def process_alu_control(self, execution_step: CPUExecutionStep):
         if (not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
                 and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
                 and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
-            self.insert_into_accumulator(
+            self.insert_into_accumulator(execution_step,
                 (self.__data_in_bus.read() + self.__alu_mux.get()) & 0b11111111)
         elif (not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
               and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
               and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
-            self.insert_into_accumulator(
+            self.insert_into_accumulator(execution_step,
                 (self.__data_in_bus.read() - self.__alu_mux.get()) & 0b11111111)
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_CTL0)
         elif (not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
               and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
               and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
-            self.insert_into_accumulator(
+            self.insert_into_accumulator(execution_step,
                 (self.__alu_mux.get() & self.__data_in_bus.read()) & 0b11111111)
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_CTL1)
         elif (not (self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
               and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
               and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
             empty_function()
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_CTL0)
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_CTL1)
         elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
               and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
               and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
-            self.insert_into_accumulator(self.__alu_mux.get() & 0b11111111)
+            self.insert_into_accumulator(execution_step,
+                 self.__alu_mux.get() & 0b11111111)
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_CTL2)
         elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
               and not (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
               and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
             empty_function()
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_CTL0)
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_CTL2)
         elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
               and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
               and not (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
             empty_function()
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_CTL1)
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_CTL2)
         elif ((self.__control_bus.read_control_bus() & ACC_CTL2) >> 7
               and (self.__control_bus.read_control_bus() & ACC_CTL1) >> 6
               and (self.__control_bus.read_control_bus() & ACC_CTL0) >> 5):
             empty_function()
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_CTL0)
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_CTL1)
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_CTL2)
         else:
-            raise ValueError(f"Invalid ALU control combination: "
+            print(f"Invalid ALU control combination: "
                  f"ACC_CTL2: {(self.__control_bus.read_control_bus() & ACC_CTL2) >> 7}, "
                  f"ACC_CTL1: {(self.__control_bus.read_control_bus() & ACC_CTL1) >> 6}, "
                  f"ACC_CTL0: {(self.__control_bus.read_control_bus() & ACC_CTL0) >> 5}")
         self.__zero_flag = self.__accumulator.get() == 0
+        execution_step.record_component(gui.cpu_execution_step.ZERO, self.__zero_flag, BOOL_TYPE)
 
-    def process_control_bus(self) -> bool:
+    def process_control_bus(self, execution_step: CPUExecutionStep) -> bool:
         if (self.__control_bus.read_control_bus() & HALT_FLAG) >> 16:
             print("HALT")
+            execution_step.record_control_line(gui.cpu_execution_step.HALT_FLAG)
             return True
         # Process any micro-instruction that writes to a bus as other micro-instructions will read from this
         if (self.__control_bus.read_control_bus() & ADDR_SEL) >> 4:
             self.__addr_mux.set_control(1)
-        else: self.__addr_mux.set_control(0)
+            execution_step.record_control_line(gui.cpu_execution_step.ADDR_SEL)
+            execution_step.record_component(gui.cpu_execution_step.ADDR_MUX, 1, BIT_1_TYPE)
+        else:
+            self.__addr_mux.set_control(0)
+            execution_step.record_component(gui.cpu_execution_step.ADDR_MUX, 0, BIT_1_TYPE)
         if (self.__control_bus.read_control_bus() & DATA_SEL) >> 3:
             self.__alu_mux.set_control(1)
-        else: self.__alu_mux.set_control(0)
+            execution_step.record_control_line(gui.cpu_execution_step.DATA_SEL)
+            execution_step.record_component(gui.cpu_execution_step.DATA_MUX, 1, BIT_1_TYPE)
+        else:
+            self.__alu_mux.set_control(0)
+            execution_step.record_component(gui.cpu_execution_step.DATA_MUX, 0, BIT_1_TYPE)
         if (self.__control_bus.read_control_bus() & PC_EN) >> 13:
             self.__addr_mux.set_input_0(self.__program_counter.get())
+            execution_step.record_control_line(gui.cpu_execution_step.PC_EN)
         if (self.__control_bus.read_control_bus() & PC_INC) >> 12:
             self.__program_counter.enable()
+            execution_step.record_control_line(gui.cpu_execution_step.PC_INC)
         if (self.__control_bus.read_control_bus() & ACC_EN) >> 9:
             self.__data_in_bus.clear()
             self.__data_in_bus.write(self.__accumulator.get())
+            execution_step.record_control_line(gui.cpu_execution_step.ACC_EN)
+        else:
+            self.__data_in_bus.clear()
         if (self.__control_bus.read_control_bus() & RAM_EN) >> 2:
             self.__data_out_bus.clear()
             self.__data_out_bus.write(self.__memory.get(self.__addr_mux.get()))
+            execution_step.record_control_line(gui.cpu_execution_step.RAM_EN)
+            execution_step.record_memory_read_snapshot(self.__addr_mux.get())
+        else:
+            self.__data_out_bus.clear()
         if (self.__control_bus.read_control_bus() & IR_WR) >> 9:
             self.__instruction_register.insert(self.__data_out_bus.read())
-
+            execution_step.record_control_line(gui.cpu_execution_step.IR_WR)
         self.__internal_bus.clear()
         self.__internal_bus.write(self.__instruction_register.get())
 
@@ -164,18 +198,32 @@ class Run:
 
         # All outputs have been processed and now we will read from things
         # The IR is set by default when there is data on the data out bus
-        self.process_alu_control()
+        self.process_alu_control(execution_step)
         if (self.__control_bus.read_control_bus() & PC_LD) >> 10:
             if (self.__control_bus.read_control_bus() & ZERO_FLAG) >> 14:
+                execution_step.record_control_line(gui.cpu_execution_step.ZERO_FLAG)
                 if self.__zero_flag:
                     self.__program_counter.insert(self.__internal_bus.read() & 0B11111111)
+                    execution_step.record_control_line(gui.cpu_execution_step.PC_LD)
             elif (self.__control_bus.read_control_bus() & NOT_ZERO_FLAG) >> 15:
+                execution_step.record_control_line(gui.cpu_execution_step.NOT_ZERO_FLAG)
                 if not self.__zero_flag:
                     self.__program_counter.insert(self.__internal_bus.read() & 0B11111111)
+                    execution_step.record_control_line(gui.cpu_execution_step.PC_LD)
             else:
+                execution_step.record_control_line(gui.cpu_execution_step.PC_LD)
                 self.__program_counter.insert(self.__internal_bus.read() & 0B11111111)
         if (self.__control_bus.read_control_bus() & RAM_WR) >> 1:
             self.__memory.insert(self.__addr_mux.get(), self.__data_in_bus.read())
+            execution_step.record_control_line(gui.cpu_execution_step.RAM_WR)
+            execution_step.record_memory_write_snapshot(self.__addr_mux.get(), self.__data_in_bus.read())
+        execution_step.record_component(gui.cpu_execution_step.PC, self.__program_counter.get(), BITS_8_TYPE)
+        execution_step.record_component(gui.cpu_execution_step.IR, self.__instruction_register.get(), BITS_16_TYPE)
+        execution_step.record_component(gui.cpu_execution_step.ACC, self.__accumulator.get(), BITS_8_TYPE)
+        execution_step.record_bus(gui.cpu_execution_step.ADDR_BUS, self.__addr_mux.get(), BITS_8_TYPE)
+        execution_step.record_bus(gui.cpu_execution_step.INTERNAL_BUS, self.__internal_bus.read(), BITS_16_TYPE)
+        execution_step.record_bus(gui.cpu_execution_step.DATA_IN_BUS, self.__data_in_bus.read(), BITS_16_TYPE)
+        execution_step.record_bus(gui.cpu_execution_step.DATA_OUT_BUS, self.__data_out_bus.read(), BITS_16_TYPE)
         return False
 
     def gui(self):
@@ -398,7 +446,7 @@ class Run:
                 execution_step = CPUExecutionStep(step, instruction_text, desc)
                 self.__control_bus.clear()
                 self.__control_bus.add_control(instructions)
-                if self.process_control_bus():
+                if self.process_control_bus(execution_step):
                     run = False
                 execution_steps.append(execution_step)
             i += 1
