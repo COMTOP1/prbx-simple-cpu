@@ -214,9 +214,10 @@ class Run:
                 execution_step.record_control_line(gui.cpu_execution_step.PC_LD)
                 self.__program_counter.insert(self.__internal_bus.read() & 0B11111111)
         if (self.__control_bus.read_control_bus() & RAM_WR) >> 1:
+            initial_value = self.__memory.get(self.__addr_mux.get())
             self.__memory.insert(self.__addr_mux.get(), self.__data_in_bus.read())
             execution_step.record_control_line(gui.cpu_execution_step.RAM_WR)
-            execution_step.record_memory_write_snapshot(self.__addr_mux.get(), self.__data_in_bus.read())
+            execution_step.record_memory_write_snapshot(self.__addr_mux.get(), self.__data_in_bus.read(), initial_value)
         execution_step.record_component(gui.cpu_execution_step.PC, self.__program_counter.get(), BITS_8_TYPE)
         execution_step.record_component(gui.cpu_execution_step.IR, self.__instruction_register.get(), BITS_16_TYPE)
         execution_step.record_component(gui.cpu_execution_step.ACC, self.__accumulator.get(), BITS_8_TYPE)
@@ -231,6 +232,12 @@ class Run:
             new_step = self.instruction_bar.current_step + direction
             if 0 <= new_step <= self.instruction_bar.total_steps:
                 self.memory_panel.clear_highlight()
+
+                if direction < 0:
+                    mem_snapshot = execution_steps[self.instruction_bar.current_step].memory_write_snapshot
+                    for addr, (new_val, old_val) in mem_snapshot.items():
+                        self.memory_panel.update_value(addr, old_val)
+
                 self.instruction_bar.update_step(new_step, self.instruction_bar.total_steps)
                 self.instruction_bar.update_instruction(execution_steps[new_step].instruction_name)
                 self.instruction_bar.update_description(execution_steps[new_step].micro_instruction_desc)
@@ -254,9 +261,9 @@ class Run:
 
                 self.micro_panel.set_active(execution_steps[new_step].control_lines)
 
-                for snapshot_address, snapshot_value in execution_steps[new_step].memory_write_snapshot.items():
-                    self.memory_panel.update_value(snapshot_address, snapshot_value)
-                    self.memory_panel.highlight_address(snapshot_address)
+                for addr, (new_val, old_val) in execution_steps[new_step].memory_write_snapshot.items():
+                    self.memory_panel.update_value(addr, new_val)
+                    self.memory_panel.highlight_address(addr)
 
                 memory_read_snapshot = execution_steps[new_step].memory_read_snapshot
                 if memory_read_snapshot != -1:
@@ -320,7 +327,8 @@ class Run:
         self.memory_panel = MemoryView(memory_listbox, memory_size=256)
         self.memory_panel.pack(side='right', fill='y')
 
-        for initial_address, initial_value in steps[0].memory_write_snapshot.items():
+        for initial_address, initial_value_tuple in steps[0].memory_write_snapshot.items():
+            initial_value, do_not_used = initial_value_tuple
             self.memory_panel.update_value(initial_address, initial_value)
             self.memory_panel.highlight_address(initial_address)
 
@@ -392,7 +400,7 @@ class Run:
         i = 0
         while i < len(memory):
             self.__memory.insert(i, memory[i])
-            initial_step.record_memory_write_snapshot(i, memory[i])
+            initial_step.record_memory_write_snapshot(i, memory[i], 0)
             i += 1
         run = True
         max_runs = 1000

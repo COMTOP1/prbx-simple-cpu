@@ -42,7 +42,8 @@ class CPUExecutionStep:
     step_number: int
     instruction_name: str
     micro_instruction_desc: str
-    memory_write_snapshot: Dict[int, int] = field(default_factory=dict)
+    memory_write_snapshot: Dict[int, Tuple[int, int]] = field(default_factory=dict)
+    # Format: { address: (new_value, old_value) }
     memory_read_snapshot: int = -1
     control_lines: list[ControlLineName] = field(default_factory=list)
     component_values: Dict[ComponentName, Tuple[str, int]] = field(default_factory=dict)
@@ -88,5 +89,5 @@ class CPUExecutionStep:
     def record_memory_read_snapshot(self, memory_read_snapshot: int):
         self.memory_read_snapshot = memory_read_snapshot
 
-    def record_memory_write_snapshot(self, address: int, value: int):
-        self.memory_write_snapshot[address] = value
+    def record_memory_write_snapshot(self, address: int, new_value: int, old_value: int):
+        self.memory_write_snapshot[address] = (new_value, old_value)
