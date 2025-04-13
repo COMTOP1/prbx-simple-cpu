@@ -1,0 +1,31 @@
+; Multiplication of A x B
+; A is stored at 30
+; B is stored at 31
+; Result is stored at 32
+; Constant 1 is stored at 33
+; Constant 0 is stored at 34
+; === Load initial values ===
+MOVE 5
+STORE 30
+MOVE 4
+STORE 31
+MOVE 1
+STORE 33
+MOVE 0
+STORE 34
+; === Multiplication loop ===
+LOAD 34       ; Clear ACC = 0
+STORE 32      ; RESULT = 0
+LOAD 31       ; Load B (multiplier)
+STORE 35      ; TEMP_COUNTER = B LOOP after
+LOAD 35       ; Load counter
+JUMPZ 21      ; If zero, we're done
+LOAD 32       ; Load current result
+ADDM 30       ; Add A (multiplicand)
+STORE 32      ; Store back to RESULT
+LOAD 35       ; Load counter
+SUBM 33       ; Subtract 1
+STORE 35      ; Store back
+JUMPNZ 12     ; If not zero, continue
+; === End ===
+HALT
