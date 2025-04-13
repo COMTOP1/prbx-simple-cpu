@@ -45,6 +45,12 @@ class Run:
     __addr_mux: Mux
     __zero_flag: bool
 
+    cpu_blocks: CPUBlockDiagram
+    micro_panel: MicroInstructionPanel
+    readout_frame: CPUReadout
+    memory_panel: MemoryView
+    instruction_bar: InstructionBar
+
     __args: argparse.Namespace
 
     def __init__(self):
@@ -183,7 +189,7 @@ class Run:
 
         window = tk.Tk()
         print('gui')
-        root = window
+        root = tk.Tk()
         root.title("SimpleCPU Emulator")
         root.geometry("1200x800")
         root.configure(bg="black")
@@ -201,29 +207,29 @@ class Run:
         canvas = tk.Canvas(canvas_frame, bg="white", width=1000, height=600)
         canvas.pack(fill=tk.BOTH, expand=True)
 
-        cpu_blocks = CPUBlockDiagram(canvas)
-        cpu_blocks.draw_all_blocks()
+        self.cpu_blocks = CPUBlockDiagram(canvas)
+        self.cpu_blocks.draw_all_blocks()
         connections = CPUConnections(canvas)
         connections.draw_connections()
 
         # --- Micro-instruction Readout (under canvas) ---
-        micro_panel = MicroInstructionPanel(canvas, [
+        self.micro_panel = MicroInstructionPanel(canvas, [
             "IR_WR", "ACC_WR", "ACC_EN", "ACC_CTL0", "ACC_CTL1", "ACC_CTL2",
             "DATA_SEL", "ADDR_SEL",
             "RAM_EN", "RAM_WR", "PC_EN", "PC_LD", "PC_INC",
             "ZERO_FLAG", "NOT_ZERO_FLAG",
             "HALT_FLAG"
         ])
-        micro_panel.pack(side=tk.BOTTOM, fill=tk.X)
+        self.micro_panel.pack(side=tk.BOTTOM, fill=tk.X)
 
         # --- CPU Readout (under canvas) ---
-        readout_frame = CPUReadout(canvas, [
+        self.readout_frame = CPUReadout(canvas, [
             ("DATA_OUT_BUS", BITS_16_TYPE), ("DATA_IN_BUS", BITS_16_TYPE),
             ("INTERNAL_BUS", BITS_16_TYPE), ("ADDRESS_BUS", BITS_8_TYPE),
             ("ACC", BITS_8_TYPE), ("PC", BITS_8_TYPE), ("IR", BITS_8_TYPE),
             ("ZERO", BOOL_TYPE)
         ])
-        readout_frame.pack(side=tk.BOTTOM, fill=tk.X)
+        self.readout_frame.pack(side=tk.BOTTOM, fill=tk.X)
 
         # --- Memory display ---
         memory_frame = tk.Frame(top_frame)
@@ -235,45 +241,46 @@ class Run:
         memory_listbox.pack(side=tk.LEFT, fill=tk.Y)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        memory_panel = MemoryView(memory_listbox, memory_size=256)
-        memory_panel.pack(side='right', fill='y')
+        self.memory_panel = MemoryView(memory_listbox, memory_size=256)
+        self.memory_panel.pack(side='right', fill='y')
+
+        for initial_address, initial_value in steps[0].memory_write_snapshot.items():
+            self.memory_panel.update_value(initial_address, initial_value)
+            self.memory_panel.highlight_address(initial_address)
 
         # Example update (simulate micro-instruction being active)
-        def simulate_update1():
-            active = {"ACC_EN", "RAM_EN", "PC_INC", "IR_WR"}
-            micro_panel.set_active(active)
-            readout_frame.update_values([
-                ("DATA_OUT_BUS", 0x3F, BITS_16_TYPE),
-                ("DATA_IN_BUS", 0x12, BITS_16_TYPE),
-                ("INTERNAL_BUS", 0xAB, BITS_16_TYPE),
-                ("ADDRESS_BUS", 0x1C, BITS_8_TYPE),
-                ("ACC", 0x4E, BITS_8_TYPE),
-                ("PC", 0x0A, BITS_8_TYPE),
-                ("IR", 0xB2, BITS_8_TYPE),
-                ("ZERO", 1, BOOL_TYPE),
-            ])
-            cpu_blocks.update_block_value([("ACC", "0x11"), ("ZERO", "True"), ("ALU_ACC", "0x32"), ("ADDR_MUX", "1")])
-
-        def simulate_update2():
-            active = {"NOT_ZERO_FLAG", "HALT_FLAG"}
-            micro_panel.set_active(active)
-            self.instruction_bar.update_instruction("MOVE 2")
-            self.instruction_bar.update_step(5, 31)
-
-        def simulate_update3():
-            active = {"ACC_CTL0", "ACC_CTL1"}
-            micro_panel.set_active(active)
-            memory_panel.clear_highlight()
-
-        def simulate_ram():
-            memory_panel.update_value(12, 120)
-            memory_panel.highlight_address(12)
-
-        root.after(2000, simulate_update1)
-        root.after(4000, simulate_update2)
-        root.after(6000, simulate_update3)
-
-        root.after(3000, simulate_ram)
+        # def simulate_update1():
+        #     self.micro_panel.set_active({"ACC_EN", "RAM_EN", "PC_INC", "IR_WR"})
+        #     self.readout_frame.update_values([
+        #         ("DATA_OUT_BUS", 0x3F, BITS_16_TYPE),
+        #         ("DATA_IN_BUS", 0x12, BITS_16_TYPE),
+        #         ("INTERNAL_BUS", 0xAB, BITS_16_TYPE),
+        #         ("ADDRESS_BUS", 0x1C, BITS_8_TYPE),
+        #         ("ACC", 0x4E, BITS_8_TYPE),
+        #         ("PC", 0x0A, BITS_8_TYPE),
+        #         ("IR", 0xB2, BITS_8_TYPE),
+        #         ("ZERO", 1, BOOL_TYPE),
+        #     ])
+        #     self.cpu_blocks.update_block_value([("ACC", "0x11"), ("ZERO", "True"), ("ALU_ACC", "0x32"), ("ADDR_MUX", "1")])
+        #
+        # def simulate_update2():
+        #     self.micro_panel.set_active({"NOT_ZERO_FLAG", "HALT_FLAG"})
+        #     self.instruction_bar.update_instruction("MOVE 2")
+        #     self.instruction_bar.update_step(5, 31)
+        #
+        # def simulate_update3():
+        #     self.micro_panel.set_active({"ACC_CTL0", "ACC_CTL1"})
+        #     self.memory_panel.clear_highlight()
+        #
+        # def simulate_ram():
+        #     self.memory_panel.update_value(12, 120)
+        #     self.memory_panel.highlight_address(12)
+        #
+        # root.after(2000, simulate_update1)
+        # root.after(4000, simulate_update2)
+        # root.after(6000, simulate_update3)
+        #
+        # root.after(3000, simulate_ram)
 
         root.mainloop()
 
