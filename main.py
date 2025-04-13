@@ -74,7 +74,7 @@ class Run:
         self.__alu_mux = Mux(8)
         self.__addr_mux = Mux(8)
 
-    def __set_control_defaults(self):
+    def __set_defaults(self):
         self.__alu_mux.set_input_0(0)
         self.__alu_mux.set_control(0)
         self.__addr_mux.set_input_0(0)
@@ -83,6 +83,11 @@ class Run:
         self.__data_out_bus.clear()
         self.__address_bus.clear()
         self.__internal_bus.clear()
+        self.__program_counter.insert(0)
+        self.__instruction_register.insert(0)
+        self.__memory.clear()
+        self.__accumulator.insert(0)
+        self.__zero_flag = False
 
     def insert_into_accumulator(self, execution_step: CPUExecutionStep, value: int):
         execution_step.record_bus(gui.cpu_execution_step.ALU_ACC, value, BITS_8_TYPE)
