@@ -20,5 +20,8 @@ class Memory:
             raise IndexError(f'Memory index {index} out of range')
         return self.__memory[index]
 
+    def clear(self):
+        self.__memory = [0] * len(self.__memory)
+
     def length(self) -> int:
         return len(self.__memory)
