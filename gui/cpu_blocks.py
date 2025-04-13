@@ -18,8 +18,8 @@ class CPUBlockDiagram:
         self.component_labels[name] = label_id
 
         if mux:
-            self.canvas.create_text(x0, y0, text="0", font=("Arial", 10), justify=tk.CENTER)
-            self.canvas.create_text(x1, y1, text="1", font=("Arial", 10), justify=tk.CENTER)
+            self.canvas.create_text(x0, y0, text="0", font=("Arial", 11), justify=tk.CENTER, fill=font_colour)
+            self.canvas.create_text(x1, y1, text="1", font=("Arial", 11), justify=tk.CENTER, fill=font_colour)
 
     def draw_all_blocks(self):
         self.draw_block("ACC", "Accumulator\nACC ", 250, 550, initial_value="0x00")
