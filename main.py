@@ -351,30 +351,44 @@ class Run:
             print(f"{self.__program_counter.get()} 0x{mem_val:04x}")
             if (mem_val >> 12) == 0X0:
                 instruction = MOVE
+                instruction_text = f"MOVE {mem_val & 0xFF}"
             elif (mem_val >> 12) == 0X1:
                 instruction = ADD
+                instruction_text = f"ADD {mem_val & 0xFF}"
             elif (mem_val >> 12) == 0X2:
                 instruction = SUB
+                instruction_text = f"SUB {mem_val & 0xFF}"
             elif (mem_val >> 12) == 0X3:
                 instruction = AND
+                instruction_text = f"AND {mem_val & 0xFF}"
             elif (mem_val >> 12) == 0X4:
                 instruction = LOAD
+                instruction_text = f"LOAD {mem_val & 0xFF}"
             elif (mem_val >> 12) == 0X5:
                 instruction = STORE
+                instruction_text = f"STORE {mem_val & 0xFF}"
             elif (mem_val >> 12) == 0X6:
                 instruction = ADDM
+                instruction_text = f"ADDM {mem_val & 0xFF}"
             elif (mem_val >> 12) == 0X7:
                 instruction = SUBM
+                instruction_text = f"SUBM {mem_val & 0xFF}"
             elif (mem_val >> 12) == 0X8:
                 instruction = JUMPU
+                instruction_text = f"JUMPU {mem_val & 0xFF}"
             elif (mem_val >> 12) == 0X9:
                 instruction = JUMPZ
+                instruction_text = f"JUMPZ {mem_val & 0xFF}"
             elif (mem_val >> 12) == 0XA:
                 instruction = JUMPNZ
+                instruction_text = f"JUMPNZ {mem_val & 0xFF}"
             elif (mem_val >> 12) == 0XF:
                 instruction = HALT
+                instruction_text = "HALT"
             else:
-                raise ValueError(f"Invalid instruction: 0x{mem_val:04x}")
+                instruction = INVALID
+                instruction_text = f"INVALID - {mem_val}"
+            print(instruction_text)
             for instructions, desc in instruction:
                 self.__control_bus.clear()
                 self.__control_bus.add_control(instructions)
