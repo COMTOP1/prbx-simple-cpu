@@ -235,12 +235,13 @@ class Run:
 
     def gui(self):
         def on_step_change(direction: int, execution_steps: list[CPUExecutionStep]) -> None:
-            new_step = self.instruction_bar.current_step + direction
+            current_step = self.instruction_bar.current_step
+            new_step = current_step + direction
             if 0 <= new_step <= self.instruction_bar.total_steps:
                 self.memory_panel.clear_highlight()
 
-                if direction < 0:
-                    mem_snapshot = execution_steps[self.instruction_bar.current_step].memory_write_snapshot
+                if direction < 0 and current_step != len(execution_steps):
+                    mem_snapshot = execution_steps[current_step].memory_write_snapshot
                     for addr, (new_val, old_val) in mem_snapshot.items():
                         self.memory_panel.update_value(addr, old_val)
 
