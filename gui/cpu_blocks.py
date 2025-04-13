@@ -23,11 +23,11 @@ class CPUBlockDiagram:
 
     def draw_all_blocks(self):
         self.draw_block("ACC", "Accumulator\nACC ", 250, 550, initial_value="0x00")
-        self.draw_block("IR", "Instruction Register\nIR ", 100, 50, initial_value="0x0000",
+        self.draw_block("IR", "Instruction Register\nIR ", 90, 50, initial_value="0x0000", w=220,
                         colour="slate blue")
         self.draw_block("PC", "Program Counter\nPC ", 525, 200, initial_value="0x00",
                         colour="maroon")
-        self.draw_block("ALU", "Arithmetic Logic Unit\nALU", 250, 400, colour="green")
+        self.draw_block("ALU", "Arithmetic Logic Unit\nALU", 240, 400, colour="green", w=220)
         self.draw_block("CONTROL_LOGIC", "Control Logic\n(Lines Below)", 30, 300, w=140, h=70,
                         colour="grey")
         self.draw_block("MEMORY", "Memory\n(Right side)", 750, 150, w=140, h=400, colour="grey")
