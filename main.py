@@ -276,13 +276,39 @@ class Run:
                 if memory_read_snapshot != -1:
                     self.memory_panel.highlight_address(memory_read_snapshot, color="green")
 
+        def open_file():
+            initial_dir = os.path.dirname(os.path.abspath(__file__))
+            file_path = filedialog.askopenfilename(filetypes=[("DAT files", "*.dat")], initialdir=initial_dir)
+
+            if file_path:
+                file_name.set(file_path)
+                f = open(file_path)
+                contents = f.read()
+                execution_steps = self.run_emulator(contents)
+                self.instruction_bar.update_steps(execution_steps)
+
         print('gui')
         root = tk.Tk()
         root.title("SimpleCPU Emulator")
         root.geometry("1200x800")
         root.configure(bg="black")
 
-        steps = self.run_emulator()
+        # Create a frame for the top bar
+        top_bar = tk.Frame(root, height=40)
+        top_bar.pack(fill="x", side="top")
+
+        # Create a StringVar to hold the filename
+        file_name = tk.StringVar()
+
+        # Create a button to open the file explorer
+        open_button = tk.Button(top_bar, text="Open File", command=open_file)
+        open_button.pack(side="left", padx=10)
+
+        # Create a label to display the filename
+        file_label = tk.Label(top_bar, textvariable=file_name, fg="white")
+        file_label.pack(side="left", padx=10, pady=2)
+
+        steps = self.run_emulator(self.unparsed_instructions)
 
         self.instruction_bar = InstructionBar(root, steps, on_step_change)
 
