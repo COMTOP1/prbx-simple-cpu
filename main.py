@@ -305,7 +305,7 @@ class Run:
         open_button.pack(side="left", padx=10)
 
         # Create a label to display the filename
-        file_label = tk.Label(top_bar, textvariable=file_name, fg="white")
+        file_label = tk.Label(top_bar, textvariable=file_name, fg="white", bg="grey16")
         file_label.pack(side="left", padx=10, pady=2)
 
         steps = self.run_emulator(self.unparsed_instructions)

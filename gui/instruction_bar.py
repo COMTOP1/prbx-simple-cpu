@@ -13,21 +13,22 @@ class InstructionBar:
 
     def __init__(self, root: tk.Tk, execution_steps: List[CPUExecutionStep], on_step_change: Callable[[int, List[CPUExecutionStep]], None]):
         s = Style()
-        s.configure('My.TFrame', background='grey16')
+        s.configure('TFrame', background='grey16')
+        s.configure('TLabel', background='grey16', foreground='white')
 
-        self.__frame = ttk.Frame(root, style="My.TFrame")
+        self.__frame = ttk.Frame(root, style="TFrame")
         self.__frame.pack(fill=tk.X, pady=5, side=tk.TOP)
 
         self.__on_step_change = on_step_change
         self.execution_steps = execution_steps
 
-        self.instruction_label = ttk.Label(self.__frame, text=f"Instruction: {execution_steps[0].instruction_name}", font=("Arial", 16, "bold"))
+        self.instruction_label = ttk.Label(self.__frame, text=f"Instruction: {execution_steps[0].instruction_name}", font=("Arial", 16, "bold"), style="TLabel")
         self.instruction_label.pack(side=tk.LEFT, padx=(10, 0))
 
-        self.step_label = ttk.Label(self.__frame, text=f"Step: 0 / {len(execution_steps)-1}", font=("Arial", 16))
+        self.step_label = ttk.Label(self.__frame, text=f"Step: 0 / {len(execution_steps)-1}", font=("Arial", 16), style="TLabel")
         self.step_label.pack(side=tk.LEFT, padx=(10, 0))
 
-        self.desc_label = ttk.Label(self.__frame, text=f"Description: {execution_steps[0].micro_instruction_desc}", font=("Arial", 14))
+        self.desc_label = ttk.Label(self.__frame, text=f"Description: {execution_steps[0].micro_instruction_desc}", font=("Arial", 14), style="TLabel")
         self.desc_label.pack(side=tk.LEFT, padx=(10, 0))
 
         # Navigation buttons
