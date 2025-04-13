@@ -1,12 +1,13 @@
 import tkinter as tk
 
-type readoutType = int
-BOOL_TYPE: readoutType = 0
-BITS_8_TYPE: readoutType = 1
-BITS_16_TYPE: readoutType = 2
+type CPUReadoutType = int
+BOOL_TYPE: CPUReadoutType = 0
+BIT_1_TYPE: CPUReadoutType = 1
+BITS_8_TYPE: CPUReadoutType = 2
+BITS_16_TYPE: CPUReadoutType = 3
 
 class CPUReadout(tk.Frame):
-    def __init__(self, master, labels: list[tuple[str, readoutType]], *args, **kwargs):
+    def __init__(self, master, labels: list[tuple[str, CPUReadoutType]], *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.fields = {}
 
@@ -18,6 +19,8 @@ class CPUReadout(tk.Frame):
             text = "0x00"
             if readout == BOOL_TYPE:
                 text = "False"
+            elif readout == BIT_1_TYPE:
+                text = "0"
             elif readout == BITS_8_TYPE:
                 text = "0x00"
             elif readout == BITS_16_TYPE:
@@ -27,13 +30,15 @@ class CPUReadout(tk.Frame):
             self.fields[label] = val
             i += 1
 
-    def update_values(self, data: list[tuple[str, int, readoutType]]):
+    def update_values(self, data: list[tuple[str, int, CPUReadoutType]]):
         i = 0
         while i < len(data):
             label, value, readout = data[i]
             display = ""
             if readout == BOOL_TYPE:
                 display = f"{bool(value)}"
+            if readout == BIT_1_TYPE:
+                display = f"{value}"
             elif readout == BITS_8_TYPE:
                 display = f"0x{value:02X}"
             elif readout == BITS_16_TYPE:
