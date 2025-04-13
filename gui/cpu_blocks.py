@@ -28,7 +28,7 @@ class CPUBlockDiagram:
         self.draw_block("PC", "Program Counter\nPC ", 525, 200, initial_value="0x00",
                         colour="maroon")
         self.draw_block("ALU", "Arithmetic Logic Unit\nALU", 240, 400, colour="green", w=220)
-        self.draw_block("CONTROL_LOGIC", "Control Logic\n(Lines Below)", 30, 300, w=140, h=70,
+        self.draw_block("CONTROL_LOGIC", "Control Logic\n(Lines Below)", 20, 300, w=160, h=70,
                         colour="grey")
         self.draw_block("MEMORY", "Memory\n(Right side)", 750, 150, w=140, h=400, colour="grey")
         self.draw_block("ADDR_MUX", "Address\nMux ", 550, 325, w=90, h=120,
