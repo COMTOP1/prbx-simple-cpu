@@ -26,7 +26,7 @@ class CPUConnections:
             820, 150,
             820, 25,
             435, 25,
-            435, 325,
+            435, 300,
         ], "deep sky blue") # Memory -> Data Mux
 
         line([
@@ -43,7 +43,7 @@ class CPUConnections:
         ], "lawn green") # Addr Mux -> Memory
 
         line([
-            415, 375,
+            415, 360,
             415, 400,
         ], "dim grey") # Data Mux -> ALU
 
@@ -58,7 +58,7 @@ class CPUConnections:
             200, 125,
             200, 175,
             390, 175,
-            390, 325,
+            390, 300,
         ], "purple") # IR -> Data Mux
 
         line([
