@@ -179,22 +179,50 @@ class Run:
         return False
 
     def gui(self):
-        def on_step_change(direction):
-            # You'd use this to change the current step and trigger redraws
+        def on_step_change(direction: int, execution_steps: list[CPUExecutionStep]) -> None:
             new_step = self.instruction_bar.current_step + direction
             if 0 <= new_step <= self.instruction_bar.total_steps:
+                self.memory_panel.clear_highlight()
                 self.instruction_bar.update_step(new_step, self.instruction_bar.total_steps)
-                # Add logic to update CPU/memory state here
-                print(f"Changed to step {new_step}")
+                self.instruction_bar.update_instruction(execution_steps[new_step].instruction_name)
+                self.instruction_bar.update_description(execution_steps[new_step].micro_instruction_desc)
 
-        window = tk.Tk()
+                readout_list: list[tuple[str, str]] = []
+                component_list: list[tuple[str, str]] = []
+                for name, value in execution_steps[new_step].component_values.items():
+                    str_value, int_value = value
+                    component_list.append((name, str_value))
+                    if name == "ACC" or name == "PC" or name == "IR" or name == "Zero":
+                        readout_list.append((name, str_value))
+                for name, value in execution_steps[new_step].bus_values.items():
+                    str_value, int_value = value
+                    component_list.append((name, str_value))
+                    if name == "DATA_OUT_BUS" or name == "DATA_IN_BUS" or name == "INTERNAL_BUS":
+                        readout_list.append((name, str_value))
+                    elif name == "ADDR_BUS":
+                        readout_list.append(("ADDRESS_BUS", str_value))
+                self.cpu_blocks.update_block_value(component_list)
+                self.readout_frame.update_values_formatted(readout_list)
+
+                self.micro_panel.set_active(execution_steps[new_step].control_lines)
+
+                for snapshot_address, snapshot_value in execution_steps[new_step].memory_write_snapshot.items():
+                    self.memory_panel.update_value(snapshot_address, snapshot_value)
+                    self.memory_panel.highlight_address(snapshot_address)
+
+                memory_read_snapshot = execution_steps[new_step].memory_read_snapshot
+                if memory_read_snapshot != -1:
+                    self.memory_panel.highlight_address(memory_read_snapshot, color="green")
+
         print('gui')
         root = tk.Tk()
         root.title("SimpleCPU Emulator")
         root.geometry("1200x800")
         root.configure(bg="black")
 
-        self.instruction_bar = InstructionBar(root, on_step_change)
+        steps = self.run_emulator()
+
+        self.instruction_bar = InstructionBar(root, steps, on_step_change)
 
         # === Top frame to hold canvas and memory ===
         top_frame = tk.Frame(root)
