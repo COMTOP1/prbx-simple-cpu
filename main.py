@@ -406,29 +406,6 @@ class Run:
         JUMPZ 11
         HALT'''
 
-    # unparsed_instructions = '''MOVE 5
-    # STORE 30
-    # MOVE 4
-    # STORE 31
-    # MOVE 1
-    # STORE 33
-    # MOVE 0
-    # STORE 34
-    # LOAD 34       ; Clear ACC = 0
-    # STORE 32      ; RESULT = 0
-    # LOAD 31       ; Load B (multiplier)
-    # STORE 35      ; TEMP_COUNTER = B LOOP after
-    # LOAD 35       ; Load counter
-    # JUMPZ 21      ; If zero, we're done
-    # LOAD 32       ; Load current result
-    # ADDM 30       ; Add A (multiplicand)
-    # STORE 32      ; Store back to RESULT
-    # LOAD 35       ; Load counter
-    # SUBM 33       ; Subtract 1
-    # STORE 35      ; Store back
-    # JUMPNZ 12      ; If not zero, continue
-    # HALT'''
-
     def run_emulator(self, unparsed_instructions: str):
         self.__set_defaults()
         parsed_instructions, memory = parser(unparsed_instructions)
