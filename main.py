@@ -286,7 +286,7 @@ class Run:
                 file_name.set(file_path)
                 f = open(file_path)
                 contents = f.read()
-                execution_steps = self.run_emulator(contents)
+                execution_steps, parsed_instructions = self.run_emulator(contents)
                 self.instruction_bar.update_steps(execution_steps)
 
         print('gui')
@@ -310,7 +310,7 @@ class Run:
         file_label = tk.Label(top_bar, textvariable=file_name, fg="white", bg="grey16")
         file_label.pack(side="left", padx=10, pady=2)
 
-        steps = self.run_emulator(self.unparsed_instructions)
+        steps, parsed_instructions = self.run_emulator(self.unparsed_instructions)
 
         self.instruction_bar = InstructionBar(root, steps, on_step_change)
 
@@ -351,6 +351,8 @@ class Run:
 
         self.program_panel = ProgramPanel(top_frame)
         self.program_panel.pack(side=tk.RIGHT, fill=tk.Y, padx=10)
+
+        self.program_panel.update_program(parsed_instructions)
 
         # --- Memory display ---
         memory_frame = tk.Frame(top_frame)
@@ -488,7 +490,7 @@ class Run:
                     run = False
                 execution_steps.append(execution_step)
             i += 1
-        return execution_steps
+        return execution_steps, parsed_instructions
 
     def run(self):
         if self.__args.gui_simulator:
