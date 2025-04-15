@@ -1,0 +1,27 @@
+; --- Initialize values ---
+MOVE 17           ; 0
+STORE 30          ; 1
+MOVE 42           ; 2
+STORE 31          ; 3
+
+; --- Begin MAX program ---
+LOAD 31           ; 4  ACC = B
+SUBM 30           ; 5  ACC = B - A
+
+JUMPZ 9          ; 6  If B == A → jump to shared load/store A
+
+; ACC = B - A
+; Since ACC can't be negative, if B < A → ACC wraps around to high value
+SUB 128           ; 7  If ACC ≥ 128 → result is 0
+JUMPZ 12          ; 8  B < A → jump to load A
+
+; B > A → use B
+LOAD 31           ; 9
+STORE 32          ; 10
+JUMPU 14          ; 11  Jump to HALT
+
+; B <= A → use A
+LOAD 30           ; 12
+STORE 32          ; 13
+
+HALT              ; 14
