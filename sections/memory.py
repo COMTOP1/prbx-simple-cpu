@@ -2,11 +2,13 @@ import math
 
 class Memory:
     __memory: list[int] = [0]
+    __length: int
 
     def __init__(self, length: int):
         if length <= 0 or length > math.pow(2, 16):
             raise ValueError(f'Memory length {length} is invalid')
-        self.__memory = [0] * length
+        self.__length = length
+        self.__memory = [0] * self.__length
 
     def insert(self, index: int, value: int):
         if index < 0 or index >= len(self.__memory):
@@ -21,7 +23,7 @@ class Memory:
         return self.__memory[index]
 
     def clear(self):
-        self.__memory = [0] * len(self.__memory)
+        self.__memory = [0] * self.__length
 
     def length(self) -> int:
         return len(self.__memory)

@@ -2,7 +2,10 @@ import math
 import tkinter as tk
 from tkinter import ttk
 
+
 class MemoryView(tk.Frame):
+    memory_size: int
+
     def __init__(self, master, memory_size=256, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
 
@@ -70,3 +73,7 @@ class MemoryView(tk.Frame):
     def clear_highlight(self):
         for addr in range(self.memory_size):
             self.tree.item(str(addr), tags=())
+
+    def clear_memory(self):
+        for addr in range(self.memory_size):
+            self.tree.item(str(addr), values=(f"0x{addr:02X} ({addr})", f"0x{0:04X}"))

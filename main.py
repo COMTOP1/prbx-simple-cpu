@@ -289,6 +289,7 @@ class Run:
                 file_name.set(file_path)
                 f = open(file_path)
                 contents = f.read()
+                self.memory_panel.clear_memory()
                 execution_steps, parsed_instructions = self.run_emulator(contents)
                 self.instruction_bar.update_steps(execution_steps)
                 self.program_panel.update_program(parsed_instructions)
