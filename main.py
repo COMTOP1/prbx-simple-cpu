@@ -11,6 +11,7 @@ from gui.cpu_readout_panel import CPUReadout, BITS_16_TYPE, BITS_8_TYPE, BOOL_TY
 from gui.instruction_bar import InstructionBar
 from gui.memory_view_panel import MemoryView
 from gui.micro_instruction_panel import MicroInstructionPanel
+from gui.program_panel import ProgramPanel
 from instructions import MOVE, ADD, SUB, AND, LOAD, STORE, ADDM, SUBM, JUMPU, JUMPZ, JUMPNZ, HALT, INVALID
 from parser import parser
 from sections.accumulator import Accumulator
@@ -50,6 +51,7 @@ class Run:
     micro_panel: MicroInstructionPanel
     readout_frame: CPUReadout
     memory_panel: MemoryView
+    program_panel: ProgramPanel
     instruction_bar: InstructionBar
 
     __args: argparse.Namespace
@@ -290,7 +292,7 @@ class Run:
         print('gui')
         root = tk.Tk()
         root.title("SimpleCPU Emulator")
-        root.geometry("1400x850")
+        root.geometry("1430x850")
         root.configure(bg="black")
 
         # Create a frame for the top bar
@@ -346,6 +348,9 @@ class Run:
             ("ZERO", BOOL_TYPE)
         ])
         self.readout_frame.pack(side=tk.BOTTOM, fill=tk.X)
+
+        self.program_panel = ProgramPanel(top_frame)
+        self.program_panel.pack(side=tk.RIGHT, fill=tk.Y, padx=10)
 
         # --- Memory display ---
         memory_frame = tk.Frame(top_frame)
