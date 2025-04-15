@@ -241,6 +241,7 @@ class Run:
             new_step = current_step + direction
             if 0 <= new_step <= self.instruction_bar.total_steps:
                 self.memory_panel.clear_highlight()
+                self.program_panel.clear_highlight()
 
                 if direction < 0 and current_step != len(execution_steps):
                     mem_snapshot = execution_steps[current_step].memory_write_snapshot
@@ -277,6 +278,8 @@ class Run:
                 memory_read_snapshot = execution_steps[new_step].memory_read_snapshot
                 if memory_read_snapshot != -1:
                     self.memory_panel.highlight_address(memory_read_snapshot, color="green")
+                    if "PC_EN" in execution_steps[new_step].control_lines:
+                        self.program_panel.highlight_line(memory_read_snapshot)
 
         def open_file():
             initial_dir = os.path.dirname(os.path.abspath(__file__))
@@ -288,6 +291,7 @@ class Run:
                 contents = f.read()
                 execution_steps, parsed_instructions = self.run_emulator(contents)
                 self.instruction_bar.update_steps(execution_steps)
+                self.program_panel.update_program(parsed_instructions)
 
         print('gui')
         root = tk.Tk()
