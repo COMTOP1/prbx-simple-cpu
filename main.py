@@ -296,7 +296,7 @@ class Run:
         print('gui')
         root = tk.Tk()
         root.title("SimpleCPU Emulator")
-        root.geometry("1525x850")
+        root.geometry("1540x850")
         root.configure(bg="black")
 
         # Create a frame for the top bar
