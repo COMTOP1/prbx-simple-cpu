@@ -9,7 +9,7 @@ class ProgramPanel(tk.Frame):
         self.label = tk.Label(self, text="Program", font=("Arial", 14, "bold"))
         self.label.pack(anchor="n")
 
-        self.listbox = tk.Listbox(self, font=("Courier", 14), width=25, height=30)
+        self.listbox = tk.Listbox(self, font=("Courier", 14), width=20, height=30)
         self.scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.listbox.yview)
         self.listbox.config(yscrollcommand=self.scrollbar.set)
 
