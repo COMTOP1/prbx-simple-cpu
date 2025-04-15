@@ -12,7 +12,7 @@ class MicroInstructionPanel(tk.Frame):
         for instr in instructions:
             lbl = tk.Label(
                 self, text=instr, bg="black", fg="white", width=14,
-                font=("Courier", 12, "bold"), relief=tk.FLAT
+                font=("Courier", 11, "bold"), relief=tk.FLAT
             )
             lbl.grid(row=row, column=col, padx=2, pady=2)
             self.instruction_labels[instr] = lbl
