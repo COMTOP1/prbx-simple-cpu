@@ -257,7 +257,7 @@ class Run:
                 for name, value in execution_steps[new_step].component_values.items():
                     str_value, int_value = value
                     component_list.append((name, str_value))
-                    if name == "ACC" or name == "PC" or name == "IR" or name == "Zero":
+                    if name == "ACC" or name == "PC" or name == "IR" or name == "ZERO":
                         readout_list.append((name, str_value))
                 for name, value in execution_steps[new_step].bus_values.items():
                     str_value, int_value = value
