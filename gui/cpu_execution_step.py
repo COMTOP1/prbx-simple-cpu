@@ -43,7 +43,6 @@ class CPUExecutionStep:
     instruction_name: str
     micro_instruction_desc: str
     memory_write_snapshot: Dict[int, Tuple[int, int]] = field(default_factory=dict)
-    # Format: { address: (new_value, old_value) }
     memory_read_snapshot: int = -1
     control_lines: list[ControlLineName] = field(default_factory=list)
     component_values: Dict[ComponentName, Tuple[str, int]] = field(default_factory=dict)
